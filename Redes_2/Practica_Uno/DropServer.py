@@ -30,7 +30,7 @@ def UploadAFile():
 				flnm = 0
 				break
 	f.close()
-	conn.sendall(b'Send was succesful')
+	conn.sendall(b'Send was succesful\n')
 	print("Done Receiving")
 	fantasy_zip = zipfile.ZipFile(ServerDirectory + '/archive.zip')
 	fantasy_zip.extractall(ServerDirectory)
@@ -39,15 +39,19 @@ def UploadAFile():
 
 def DownloadFile():
 	folderContent()
-	file2D = int(conn.recv(1024).decode())
-	#print('Se enviara el archvio:', fileList[file2D])
-	f = open(fileList[file2D], 'rb')
-	chonk = f.read(1024)
-	while chonk: 
-		conn.sendall(chonk)
+	filesname = pickle.loads(conn.recv(1024))
+	for item in filesname:
+		file2D = conn.recv(1024).decode()
+		#print('Se enviara el archvio:', fileList[file2D])
+		f = open(ServerDirectory + os.path.basename(file2D), 'rb')
 		chonk = f.read(1024)
+		while chonk: 
+			conn.sendall(chonk)
+			chonk = f.read(1024)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+	if not os.path.exists(ServerDirectory):
+		os.mkdir(ServerDirectory)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
 	s.bind((HOST, PORT))
 	s.listen()

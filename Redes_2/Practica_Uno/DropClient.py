@@ -12,6 +12,7 @@ HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 option = -1
 fileList = 0
+ServerDirectory = './.TempServerDummy/'
 
 def folderContent():
 	fileList = pickle.loads(s.recv(1024))
@@ -46,20 +47,28 @@ def UploadAFile():
 
 def DownloadFile():
 	fileList = folderContent()
-	file2D = input('Choose the file >')
+	for elem in fileList:
+		f = open(ServerDirectory + elem, 'wb')
+		f.close()
 	Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-	dirname = askdirectory(title='Opne the folder to save')
-	f = open(dirname + '/' + fileList[int(file2D)], 'wb')
-	s.sendall(file2D.encode())
-	while True:
-		data = s.recv(1024)
-		f.write(data)
-		if len(data) < 1024:
-			break
-	f.close()
+	filename = askopenfilenames(initialdir = ServerDirectory,title='Select the files')
+	s.sendall(pickle.dumps(filename))
+	#file2D = input('Choose the file >')
+	dirname = askdirectory(title='Open the folder to save')
+	for target_list in filename:
+		s.sendall(target_list.encode())
+		f = open(dirname + '/' + os.path.basename(target_list), 'wb')
+		while True:
+			data = s.recv(1024)
+			f.write(data)
+			if len(data) < 1024:
+				break
+		f.close()
 	print("Done Receiving", end='\n\n')
 	
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+	if not os.path.exists(ServerDirectory):
+		os.mkdir(ServerDirectory)
 	switcher = {
 		0: folderContent,
 		1: UploadAFile,
