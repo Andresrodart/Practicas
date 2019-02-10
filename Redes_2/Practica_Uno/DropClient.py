@@ -7,6 +7,7 @@ import pickle
 import socket
 import sys
 import os
+import shutil
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
@@ -47,6 +48,8 @@ def UploadAFile():
 
 def DownloadFile():
 	fileList = folderContent()
+	if not os.path.exists(ServerDirectory):
+    		os.mkdir(ServerDirectory)
 	for elem in fileList:
 		f = open(ServerDirectory + elem, 'wb')
 		f.close()
@@ -65,10 +68,9 @@ def DownloadFile():
 				break
 		f.close()
 	print("Done Receiving", end='\n\n')
-	
+	shutil.rmtree(ServerDirectory, ignore_errors=True)
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-	if not os.path.exists(ServerDirectory):
-		os.mkdir(ServerDirectory)
 	switcher = {
 		0: folderContent,
 		1: UploadAFile,
