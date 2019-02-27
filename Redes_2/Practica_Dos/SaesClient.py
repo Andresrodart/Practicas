@@ -37,28 +37,36 @@ class MainWindow(QMainWindow):
 class Alumno(QWidget):
 	def __init__(self, parent):        
 		super(Alumno, self).__init__(parent)
-		self.parent().resize(500,250)
 		self.layout = QVBoxLayout(self)
+		self.mainAlumno()
+
+	def mainAlumno(self):
+		self.clean()
+		self.parent().resize(500,250)
+		self.mainWidget = QWidget()
+		self.mainWidget.layout = QVBoxLayout(self)
 		
 		self.button1 = QPushButton("Inscribir")
-		self.layout.addWidget(self.button1)
+		self.mainWidget.layout.addWidget(self.button1)
 		self.button1.clicked.connect(self.inscribir)
 		
 		self.button2 = QPushButton("Ver calificaciones")
 		self.button2.clicked.connect(self.calificaciones)
-		self.layout.addWidget(self.button2)
+		self.mainWidget.layout.addWidget(self.button2)
 		
 		self.button3 = QPushButton("Ver horario")
 		self.button3.clicked.connect(self.clean)
-		self.layout.addWidget(self.button3)
+		self.mainWidget.layout.addWidget(self.button3)
 
 		self.button4 = QPushButton("Salir")
-		self.layout.addWidget(self.button4)
+		self.mainWidget.layout.addWidget(self.button4)
 		self.button4.clicked.connect(self.parent().on_button_clicked_salir)
 
-		
+		self.mainWidget.setLayout(self.mainWidget.layout)
+		self.layout.addWidget(self.mainWidget)		
 		self.setLayout(self.layout)
-
+	
+	
 	def inscribir(self):
 		self.clean()
 		self.tabs = QTabWidget()
@@ -119,27 +127,39 @@ class Alumno(QWidget):
 		self.grupo.layout.addWidget(self.b6,2,1)
 		
 		self.grupo.setLayout(self.grupo.layout)
-
-		self.layout.addWidget(self.tabs)
 		
 		sign = QPushButton("Inscribisrse")
+		rtrn = QPushButton("Regresar")
 		sign.clicked.connect(self.sendInfo)
+		rtrn.clicked.connect(self.mainAlumno)
+		
+		auxBox = QWidget()
+		auxBox.layout = QHBoxLayout()
+		auxBox.layout.addWidget(sign)
+		auxBox.layout.addWidget(rtrn)
+		auxBox.setLayout(auxBox.layout)
 
-		self.layout.addWidget(sign)
+		self.layout.addWidget(self.tabs)
+		self.layout.addWidget(auxBox)
 		self.setLayout(self.layout)
 
 	def calificaciones(self):
 		self.clean()
+
 	
 	def clean(self):
-		for i in reversed(range(self.layout.count())): 
-			self.layout.itemAt(i).widget().setParent(None)
+		try:
+			for i in reversed(range(self.layout.count())): 
+				self.layout.itemAt(i).widget().setParent(None)
+		except:
+			pass
 	
 	def sendInfo(self):
 		if self.boleta.text() != '' and self.nombre.text() != '' and self.ApeMate.text() != ''  and self.ApePate.text() != '' and self.group != '' and self.foto_path != '':
 			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 			server_address = (HOST, PORT)
 			alumno = {
+				"boleta": self.boleta.text(),
 				"name": self.nombre.text(), 
 				"ap":	self.ApePate.text(),
 				"am":	self.ApeMate.text(),
@@ -155,13 +175,17 @@ class Alumno(QWidget):
 				print('waiting to receive')
 				data, server = sock.recvfrom(4096)
 				print('received {!r}'.format(data))
+				
 				if data.decode() == 'end':
-					f = open(self.foto_path, 'wb')
-					chonk = f.read(1024)
+					f = open(self.foto_path, 'rb')
+					chonk = f.read(4096)
 					while chonk: 
 						sock.sendto(chonk, server_address)
-						chonk = f.read(1024)
+						data, server = sock.recvfrom(4096)
+						#print('received {!r}'.format(data))
+						chonk = f.read(4096)
 					f.close()
+			
 			finally:
 				print('closing socket')
 				sock.close()

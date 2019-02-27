@@ -1,0 +1,38 @@
+{
+    "Grupos": [
+        {
+            "Boleta": "0002",
+            "Materias": {
+                "Fisica 2": "",
+                "Mate 2": "",
+                "Quimica 2": ""
+            }
+        },
+        {
+            "Boleta": "0001",
+            "Materias": {
+                "Fisica 1": "",
+                "Mate 1": "",
+                "Quimica 1": ""
+            }
+        }
+    ],
+    "alumnos": [
+        {
+            "am": "Levoy",
+            "ap": "Stoneheart",
+            "boleta": "0002",
+            "foto": "FB_IMG_1544918907617.jpg",
+            "group": "Grupo 2-A",
+            "name": "Mariela"
+        },
+        {
+            "am": "Varo",
+            "ap": "Bishop",
+            "boleta": "0001",
+            "foto": "FB_IMG_1544209290263.jpg",
+            "group": "Grupo 1-A",
+            "name": "Andrew"
+        }
+    ]
+}
