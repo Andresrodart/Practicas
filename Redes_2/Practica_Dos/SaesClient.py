@@ -1,5 +1,8 @@
+import json
 import sys
 import os
+import socket
+import pickle
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -136,17 +139,29 @@ class Alumno(QWidget):
 		if self.boleta.text() != '' and self.nombre.text() != '' and self.ApeMate.text() != ''  and self.ApePate.text() != '' and self.group != '' and self.foto_path != '':
 			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 			server_address = (HOST, PORT)
-			message = b'This is the message.  It will be repeated.'
+			alumno = {
+				"name": self.nombre.text(), 
+				"ap":	self.ApePate.text(),
+				"am":	self.ApeMate.text(),
+				"group":self.group,
+				"foto":	os.path.basename(self.foto_path)
+				}
 			try:
 				# Send data
-				print('sending {!r}'.format(message))
-				sent = sock.sendto(message, server_address)
+				print('sending', alumno)
+				sent = sock.sendto(pickle.dumps(alumno), server_address)
 
 				# Receive response
 				print('waiting to receive')
 				data, server = sock.recvfrom(4096)
 				print('received {!r}'.format(data))
-
+				if data.decode() == 'end':
+					f = open(self.foto_path, 'wb')
+					chonk = f.read(1024)
+					while chonk: 
+						sock.sendto(chonk, server_address)
+						chonk = f.read(1024)
+					f.close()
 			finally:
 				print('closing socket')
 				sock.close()
