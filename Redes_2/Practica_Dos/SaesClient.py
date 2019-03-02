@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
 
 		self.setWindowTitle("MogSaes")
 		windw = Window(self)
+		windw.setMinimumSize(1,1)
 		# Set the central widget of the Window. Widget will expand
 		# to take up all the space in the window by default.
 		self.setCentralWidget(windw)
@@ -42,7 +43,7 @@ class Alumno(QWidget):
 
 	def mainAlumno(self):
 		self.clean()
-		self.parent().resize(500,250)
+		#self.parent().resize(500,250)
 		self.mainWidget = QWidget()
 		self.mainWidget.layout = QVBoxLayout(self)
 		
@@ -66,7 +67,7 @@ class Alumno(QWidget):
 		self.layout.addWidget(self.mainWidget)		
 		self.setLayout(self.layout)
 	
-	
+
 	def inscribir(self):
 		self.clean()
 		self.tabs = QTabWidget()
@@ -145,8 +146,27 @@ class Alumno(QWidget):
 
 	def calificaciones(self):
 		self.clean()
+		self.parent().resize(250,100)
+		getUser = QWidget()
+		getUser.layout = QFormLayout(self)
+		
+		boleta = QLineEdit(self)
+		LB = QLabel('Boleta', self)
+		getUser.setLayout(getUser.layout)
+		snd = QPushButton("Aceptar")
+		snd.clicked.connect(self.lookGrades)
+		rtrn = QPushButton("Regresar")
+		rtrn.clicked.connect(self.mainAlumno)
 
-	
+		getUser.layout.addRow(LB, boleta)
+		getUser.layout.addRow(snd, rtrn)
+		self.layout.addWidget(getUser)
+		self.setLayout(self.layout)
+		#self.parent().setFixedSize(self.layout.sizeHint())
+
+	def lookGrades(self):
+		pass
+
 	def clean(self):
 		try:
 			for i in reversed(range(self.layout.count())): 
@@ -169,7 +189,7 @@ class Alumno(QWidget):
 			try:
 				# Send data
 				print('sending', alumno)
-				sent = sock.sendto(pickle.dumps(alumno), server_address)
+				sock.sendto(pickle.dumps(alumno), server_address)
 
 				# Receive response
 				print('waiting to receive')
@@ -189,6 +209,9 @@ class Alumno(QWidget):
 			finally:
 				print('closing socket')
 				sock.close()
+				QMessageBox.question(self, 'Exito', "El alumno ha sido inscrito", QMessageBox.Ok, QMessageBox.Ok)
+				self.mainAlumno()
+
 
 		else:
 			QMessageBox.question(self, 'Error', "Faltan campos", QMessageBox.Ok, QMessageBox.Ok)

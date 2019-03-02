@@ -15,6 +15,22 @@
                 "Mate 1": "",
                 "Quimica 1": ""
             }
+        },
+        {
+            "Boleta": "0003",
+            "Materias": {
+                "Etica 1": "",
+                "Finanzas 1": "",
+                "Gestion 1": ""
+            }
+        },
+        {
+            "Boleta": "0004",
+            "Materias": {
+                "Etica 2": "",
+                "Finanzas 2": "",
+                "Gestion 2": ""
+            }
         }
     ],
     "alumnos": [
@@ -33,6 +49,22 @@
             "foto": "FB_IMG_1544209290263.jpg",
             "group": "Grupo 1-A",
             "name": "Andrew"
+        },
+        {
+            "am": "Salez",
+            "ap": "Miranda",
+            "boleta": "0003",
+            "foto": "20151004_221641000_iOS.jpg",
+            "group": "Grupo 1-B",
+            "name": "Elena"
+        },
+        {
+            "am": "Cervantes",
+            "ap": "Moreno",
+            "boleta": "0004",
+            "foto": "20150530_195422000_iOS.jpg",
+            "group": "Grupo 2-B",
+            "name": "Axel"
         }
     ]
 }
