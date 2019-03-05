@@ -29,8 +29,9 @@ class MainWindow(QMainWindow):
 		#alert.setText('You clicked the button!')
 		#alert.exec_()
 	def on_button_clicked_maestro(self):
-		Maestro = Maestro(self) 
-		self.setCentralWidget(Maestro)
+		pass
+		#Maestro = Maestro(self) 
+		#self.setCentralWidget(Maestro)
 	def on_button_clicked_salir(self):
 		windw = Window(self)
 		self.setCentralWidget(windw)
@@ -56,7 +57,7 @@ class Alumno(QWidget):
 		self.mainWidget.layout.addWidget(self.button2)
 		
 		self.button3 = QPushButton("Ver horario")
-		self.button3.clicked.connect(self.clean)
+		self.button3.clicked.connect(self.horario)
 		self.mainWidget.layout.addWidget(self.button3)
 
 		self.button4 = QPushButton("Salir")
@@ -150,7 +151,7 @@ class Alumno(QWidget):
 		getUser = QWidget()
 		getUser.layout = QFormLayout(self)
 		
-		boleta = QLineEdit(self)
+		self.boletaS = QLineEdit(self)
 		LB = QLabel('Boleta', self)
 		getUser.setLayout(getUser.layout)
 		snd = QPushButton("Aceptar")
@@ -158,14 +159,118 @@ class Alumno(QWidget):
 		rtrn = QPushButton("Regresar")
 		rtrn.clicked.connect(self.mainAlumno)
 
-		getUser.layout.addRow(LB, boleta)
+		getUser.layout.addRow(LB, self.boletaS)
 		getUser.layout.addRow(snd, rtrn)
 		self.layout.addWidget(getUser)
 		self.setLayout(self.layout)
 		#self.parent().setFixedSize(self.layout.sizeHint())
 
+	def horario(self):
+		self.clean()
+		self.parent().resize(250,100)
+		getUser = QWidget()
+		getUser.layout = QFormLayout(self)
+		
+		self.boletaS = QLineEdit(self)
+		LB = QLabel('Boleta', self)
+		getUser.setLayout(getUser.layout)
+		snd = QPushButton("Aceptar")
+		snd.clicked.connect(self.lookHorario)
+		rtrn = QPushButton("Regresar")
+		rtrn.clicked.connect(self.mainAlumno)
+
+		getUser.layout.addRow(LB, self.boletaS)
+		getUser.layout.addRow(snd, rtrn)
+		self.layout.addWidget(getUser)
+		self.setLayout(self.layout)
+	
+	def lookHorario(self):
+		if self.boletaS.text() != '':
+			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+			server_address = (HOST, PORT)
+			alumno = {
+				"op": 'horario',
+				"calOf": self.boletaS.text()
+				}
+			try:
+				# Send data
+				sock.sendto(pickle.dumps(alumno), server_address)
+				
+				data, server = sock.recvfrom(4096)
+				try:
+					self.grades = pickle.loads(data)
+					self.showGrades()
+				except  Exception as e: 
+					print(e)
+					if data.decode() == 'No_user':
+						QMessageBox.question(self, 'Error', "Boleta no encontrada", QMessageBox.Ok, QMessageBox.Ok)
+			except:
+					
+				print('closing socket')
+				sock.close()
+				#QMessageBox.question(self, 'Exito', "El alumno ha sido inscrito", QMessageBox.Ok, QMessageBox.Ok)
+				self.mainAlumno()
+
+		else:
+			QMessageBox.question(self, 'Error', "Faltan campos", QMessageBox.Ok, QMessageBox.Ok)
+
 	def lookGrades(self):
-		pass
+		if self.boletaS.text() != '':
+			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+			server_address = (HOST, PORT)
+			alumno = {
+				"op": 'grades',
+				"calOf": self.boletaS.text()
+				}
+			try:
+				# Send data
+				sock.sendto(pickle.dumps(alumno), server_address)
+				
+				data, server = sock.recvfrom(4096)
+				try:
+					self.grades = pickle.loads(data)
+					self.showGrades()
+				except  Exception as e: 
+					print(e)
+					if data.decode() == 'No_user':
+						QMessageBox.question(self, 'Error', "Boleta no encontrada", QMessageBox.Ok, QMessageBox.Ok)
+					
+			except:
+				print('closing socket')
+				sock.close()
+				#QMessageBox.question(self, 'Exito', "El alumno ha sido inscrito", QMessageBox.Ok, QMessageBox.Ok)
+				self.mainAlumno()
+
+		else:
+			QMessageBox.question(self, 'Error', "Faltan campos", QMessageBox.Ok, QMessageBox.Ok)
+
+	def showGrades(self):
+		grades = self.grades
+		print('grades in:', grades)
+		self.clean()
+		self.parent().resize(262,len(grades)*62)
+		gradetab = QWidget()
+		gradetab.layout = QVBoxLayout(self)
+		
+		rtrn = QPushButton("Regresar")
+		rtrn.clicked.connect(self.mainAlumno)
+		
+		tableWidget = QTableWidget()
+		tableWidget.setRowCount(len(grades))
+		tableWidget.setColumnCount(2)
+
+		auxCount = 0
+		for key in grades:
+			tableWidget.setItem(auxCount,0, QTableWidgetItem(key))
+			tableWidget.setItem(auxCount,1, QTableWidgetItem(grades[key]))
+			auxCount += 1	
+		#field, value = grades.items()[0]
+		#print(field, value)
+		gradetab.layout.addWidget(tableWidget)
+		gradetab.layout.addWidget(rtrn)
+		gradetab.setLayout(gradetab.layout)
+		self.layout.addWidget(gradetab)		
+		self.setLayout(self.layout)
 
 	def clean(self):
 		try:
@@ -179,6 +284,7 @@ class Alumno(QWidget):
 			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 			server_address = (HOST, PORT)
 			alumno = {
+				"op":'sign',
 				"boleta": self.boleta.text(),
 				"name": self.nombre.text(), 
 				"ap":	self.ApePate.text(),
