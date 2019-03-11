@@ -15,6 +15,17 @@ ServerDirectory = './imagesServer'
 post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
 topicos = {"perritos":[],"tecnologia":[]}
 
+def newPost():
+	topico texto
+	post
+	imagen
+	pass
+
+def sendForum():
+	pass
+
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	if not os.path.exists(ServerDirectory):
 		os.mkdir(ServerDirectory)
@@ -23,9 +34,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.listen()
 	fileList = os.listdir(ServerDirectory)
 	switcher = {
-		0: sendTopics,
-		1: sendForum,
-		2: updtateForum
+		0: sendForum,
+		1: newPost
 	}
 	print('Welcome to the Forummy')
 	while True:
@@ -43,26 +53,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 					option = -1
 			#while True:	
 	s.close()
-
-def newPost():
-	topico texto
-	post
-	imagen
-
-
-
-	pass
-
-def sendForum():
-
-	pass
-
-def updateForum():
-
-	pass
-
-def sendTopis():
-	pass
-
-def sendForum()
-	pass:
