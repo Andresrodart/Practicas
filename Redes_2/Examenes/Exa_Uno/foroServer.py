@@ -7,6 +7,7 @@ import pickle
 import socket
 import sys
 import os
+import json
 import shutil
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
@@ -16,19 +17,35 @@ post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
 topicos = {"perritos":[],"tecnologia":[]}
 
 def newPost():
-	topico texto
-	post
-	imagen
-	pass
+	forum = conn.recv(1024).decode()
+	newPost = post
+	data = json.loads(conn.recv(1024).decode())
+	if forum == 'perritos':
+		topicos["perritos"].append(data)
+	elif forum == 'tecnologia':
+		topicos["tecnologia"].append(data)
+	conn.sendall(b'succes')
 
 def sendForum():
-	pass
+	forum = conn.recv(1024).decode()
+	if forum == 'perritos':
+		dataToSend = json.dumps(topicos['perritos'])
+	elif forum == 'tecnologia':
+		dataToSend = json.dumps(topicos['tecnologia'])
+	conn.sendall(dataToSend)
 
-
+if not os.path.exists(ServerDirectory):
+		os.mkdir(ServerDirectory)
+if os.path.isfile('topicos.json'):
+	with open('topicos.json', 'r') as outfile:
+		topicos = json.load(outfile)
+		outfile.close()
+else:
+	with open('topicos.json', 'w') as outfile:
+		json.dump(topicos, outfile)
+		outfile.close()
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-	if not os.path.exists(ServerDirectory):
-		os.mkdir(ServerDirectory)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
 	s.bind((HOST, PORT))
 	s.listen()
@@ -53,3 +70,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 					option = -1
 			#while True:	
 	s.close()
+	with open('topicos.json', 'w') as outfile:
+		json.dump(topicos, outfile)
+		outfile.close()
