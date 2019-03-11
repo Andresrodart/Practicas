@@ -40,3 +40,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			#while True:	
 	s.close()
 #
+
+
+def sendTopis():
+	pass
+
+def sendForum()

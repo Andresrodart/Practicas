@@ -1,0 +1,10 @@
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\forumCliente.exe.config
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\forumCliente.exe
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\forumCliente.pdb
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.csprojAssemblyReference.cache
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.Form1.resources
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.Properties.Resources.resources
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.csproj.GenerateResource.cache
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.csproj.CoreCompileInputs.cache
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.exe
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.pdb
