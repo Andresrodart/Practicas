@@ -9,7 +9,11 @@ import sys
 import os
 import shutil
 
-ServerDirectory = './images'
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65435        # The port used by the server
+ServerDirectory = './imagesServer'
+post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
+topicos = {"perritos":[],"tecnologia":[]}
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	if not os.path.exists(ServerDirectory):
@@ -19,11 +23,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.listen()
 	fileList = os.listdir(ServerDirectory)
 	switcher = {
-		0: folderContent,
-		1: UploadAFile,
-		2: DownloadFile
+		0: sendTopics,
+		1: sendForum,
+		2: updtateForum
 	}
-	print('Welcome to the DropPle')
+	print('Welcome to the Forummy')
 	while True:
 		conn, addr = s.accept()
 		with conn:
@@ -39,10 +43,26 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 					option = -1
 			#while True:	
 	s.close()
-#
 
+def newPost():
+	topico texto
+	post
+	imagen
+
+
+
+	pass
+
+def sendForum():
+
+	pass
+
+def updateForum():
+
+	pass
 
 def sendTopis():
 	pass
 
 def sendForum()
+	pass:
