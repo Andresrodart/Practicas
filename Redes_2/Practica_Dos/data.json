@@ -7,6 +7,30 @@
             "Quimica 1": "10"
         }
     },
+    "0002": {
+        "Grupo": "Grupo 2-B",
+        "Materias": {
+            "Etica 2": "",
+            "Finanzas 2": "",
+            "Gestion 2": ""
+        }
+    },
+    "0003": {
+        "Grupo": "Grupo 3-A",
+        "Materias": {
+            "Fisica 3": "",
+            "Mate 3": "",
+            "Quimica 3": ""
+        }
+    },
+    "0005": {
+        "Grupo": "Grupo 1-B",
+        "Materias": {
+            "Etica 1": "",
+            "Finanzas 1": "",
+            "Gestion 1": ""
+        }
+    },
     "alumnos": [
         {
             "am": "Bishop",
@@ -15,6 +39,30 @@
             "foto": "FB_IMG_1544209290263.jpg",
             "group": "Grupo 1-A",
             "name": "Andrew"
+        },
+        {
+            "am": "pIIPIN",
+            "ap": "Pepin",
+            "boleta": "0002",
+            "foto": "ejempllo.jpg",
+            "group": "Grupo 2-B",
+            "name": "Pepe"
+        },
+        {
+            "am": "Cervantes",
+            "ap": "Moreno",
+            "boleta": "0003",
+            "foto": "20151004_221641000_iOS.jpg",
+            "group": "Grupo 3-A",
+            "name": "Axel"
+        },
+        {
+            "am": "Esteves",
+            "ap": "Perusquia",
+            "boleta": "0005",
+            "foto": "ejempllo.jpg",
+            "group": "Grupo 1-B",
+            "name": "Jose"
         }
     ]
 }

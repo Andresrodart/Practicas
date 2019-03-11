@@ -24,8 +24,19 @@ def folderContent():
 	return fileList
 
 def UploadAFile():
-	Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-	filename = askopenfilenames(title='Select the files') # show an "Open" dialog box and return the path to the selected file
+	chos = input("Eleige 1 para usar file selector 2 para usar D&D >")
+	filename = []
+	if chos == '1':
+		Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+		filename = askopenfilenames(title='Select the files') # show an "Open" dialog box and return the path to the selected file
+	else:
+		print("Arrastra los archivos, escibe 0 para terminar")
+		while True:
+			str_ = input()
+			if str_ != '0':
+				filename.append(str_)
+			else:
+				break
 	fantasy_zip = zipfile.ZipFile('./archive.zip', 'w')
 	for _file in list(filename):
 		fantasy_zip.write(_file, os.path.basename(_file))
