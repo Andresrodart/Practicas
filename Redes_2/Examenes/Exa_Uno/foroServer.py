@@ -14,7 +14,7 @@ HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65435        # The port used by the server
 ServerDirectory = './imagesServer'
 post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
-topicos = {"perritos":[],"tecnologia":[]}
+topicos = {"perritos":[post],"tecnologia":[post]}
 
 def newPost():
 	forum = conn.recv(1024).decode()

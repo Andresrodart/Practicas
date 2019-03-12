@@ -29,51 +29,11 @@ namespace forumCliente
             //getTopics();
         }
 
-        private void getTopics(string topic)
-        {
-            Console.WriteLine("Connecting.....");
-            try
-            {
-                string mod = "topic to searh";
-                TcpClient tcpclnt = new TcpClient();
-                tcpclnt.Connect(ipAd, PortNumber);
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(mod);
-
-                // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
-                NetworkStream stream = tcpclnt.GetStream();
-
-                // Send the message to the connected TcpServer. 
-                stream.Write(data, 0, data.Length);
-
-                Console.WriteLine("Sent: {0}", mod);
-
-                // Receive the TcpServer.response.
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
-                // Close everything.
-                stream.Close();
-                tcpclnt.Close();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
 
         private void perritos_Click(object sender, EventArgs e)
         {
             //this.Hide();
-            Form2 f2 = new Form2(userName,"json");
+            Form2 f2 = new Form2(userName,"perritos");
             f2.ShowDialog();
             
         }

@@ -77,4 +77,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 					option = -1
 			#while True:	
 	s.close()
+	client.Close();
 #
