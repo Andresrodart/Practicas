@@ -1,0 +1,10 @@
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\bin\Debug\AhorcadoCliente.exe.config
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\bin\Debug\AhorcadoCliente.exe
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\bin\Debug\AhorcadoCliente.pdb
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.csprojAssemblyReference.cache
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.Form1.resources
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.Properties.Resources.resources
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.csproj.GenerateResource.cache
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.csproj.CoreCompileInputs.cache
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.exe
+C:\Users\andre\Documents\Practicas\Redes_2\Ahorcado\AhorcadoCliente\AhorcadoCliente\obj\Debug\AhorcadoCliente.pdb

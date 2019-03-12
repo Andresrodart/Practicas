@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -25,7 +26,15 @@ namespace forumCliente
             InitializeComponent();
             userName = Prompt.ShowDialog("Ingrese su nombre de usuario", "Forum");
             System.Console.WriteLine(userName);
-            
+            string root = @"C:\imagesServer";
+            string subdir = @"C:\Temp\";
+            // If directory does not exist, create it. 
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+
+
             //getTopics();
         }
 

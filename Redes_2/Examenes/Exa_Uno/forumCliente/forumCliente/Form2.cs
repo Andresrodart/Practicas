@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -16,126 +17,52 @@ namespace forumCliente
     public partial class Form2 : Form
     {
         IPAddress ipAd = IPAddress.Parse("127.0.0.1");
-        int PortNumber = 65432;
+        int PortNumber = 65435;
         Byte[] data = new Byte[256];
         public string userName = "userHolder";
+        Topico[] jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
+        string root = @"C:\imagesServer";
+
         public Form2(String usuario, String topic)
         {
             InitializeComponent();
-            //crear posts 
-            getTopics(topic);
-            Topico a = new Topico();
-            a.usuario = "jonatan";
-            a.titulo = "Test";
-            a.texto = "uffffffffff una prubea";
-            a.imagen = "e.png";
-            a.fecha = "12/3/2019";
-
-            Topico b = new Topico();
-            b.usuario = "andres";
-            b.titulo = "tengo un perro";
-            b.texto = "es un perro maltes";
-            b.imagen = "e.png";
-            b.fecha = "12/3/2019";
-
-            Topico c = new Topico();
-            c.usuario = "andres";
-            c.titulo = "tengo un perro";
-            c.texto = "Fin";
-            c.imagen = "e.png";
-            c.fecha = "12/3/2019";
-
-            Topico[] array = new Topico[5];
-            array[0] = a;
-            array[1] = b;
-            array[2] = a;
-            array[3] = b;
-            array[4] = c;
-            //termina de crear posts
-
-            string prueba = JsonConvert.SerializeObject(array);//convierte a json
-            
-            System.Console.WriteLine(prueba);// desplegar el json en consola para comprobar
-            Topico[] jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
-
-            jsonRecibidoArray = JsonConvert.DeserializeObject<Topico[]>(prueba);//convierte el json a objetos y los guarda en el arreglo
-
-            foreach (Topico t in jsonRecibidoArray)//por cada uno de los objetos del arreglo
-            {
-                AddItem(t);
-                /*PictureBox p = new PictureBox();//se crea un picturebox para la imagen falta poner el sourec
-                p.SizeMode = PictureBoxSizeMode.StretchImage;
-                p.Name = "alo";
-                p.Size =  new Size(250, 250);
-                Bitmap MyImage = new Bitmap("C:/Users/andre/Pictures/io.jpg");
-                p.Image = (Image) MyImage;
-
-                Label usr = new Label();//el label usuario
-                usr.Text = "Usuario: " + t.usuario;
-
-                Label txt = new Label();//el label texto
-                txt.Text = t.texto;
-                txt.Location = new Point(21,30);
-
-                Panel pa = new Panel();//el tableLayoutPanel tiene dos columnas, en su segunda tiene un panel
-                pa.Controls.Add(usr);
-                pa.Controls.Add(txt);//se agregan los dos labels al panel
-                
-
-                PanelTopicos.RowCount += 1;//se añade un row
-                PanelTopicos.RowStyles.Add(new RowStyle());//no se :v copy paste)
-                PanelTopicos.Controls.Add(p, 0, PanelTopicos.RowCount - 1);//agrega la imagen en la columna0
-                PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1*/
-
-
-            }
-
-
-
-           
+            getTopics(topic);                           //Obtener posts 
+            foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
+                AddItem(t); 
+            getImages();                                //Buscamos si tenemos la simagenes
 
         }
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
         private void AddItem(Topico t)
         {
             Label usr = new Label();//el label usuario
+            usr.Font = new Font("Arial", 12, FontStyle.Bold);
             usr.Text = "Usuario: " + t.usuario;
-
+            usr.AutoSize = true;
             Label txt = new Label();//el label texto
             txt.Text = t.texto;
-            txt.Location = new Point(21, 30);
+            txt.AutoSize = true;
 
-            Panel pa = new Panel();//el tableLayoutPanel tiene dos columnas, en su segunda tiene un panel
-            pa.Controls.Add(usr);
-            pa.Controls.Add(txt);//se agregan los dos labels al panel
-            //get a reference to the previous existent 
-            //RowStyle temp = PanelTopicos.RowStyles[panel.RowCount - 1];
-            //increase panel rows count by one
-            PanelTopicos.RowCount++;
-            //add a new RowStyle as a copy of the previous one
-            //PanelTopicos.RowStyles.Add(new RowStyle());
-            //add your three controls
-            //PanelTopicos.Controls.Add(p, 0, PanelTopicos.RowCount - 1);//agrega la imagen en la columna0
-            PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1
+            PanelTopicos.Controls.Add(usr);
+            PanelTopicos.Controls.Add(txt);//se agregan los dos labels al panel
+            //pa.FlowDirection = FlowDirection.TopDown;
+
+            //PanelTopicos.RowCount++;
+            //PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1
             if (t.imagen != "")
-                AddImage(t.imagen);
+                AddImage(t.imagen.Substring(1));
         }
 
         private void AddImage(string imagen)
         {
+            string img_2add = System.IO.Path.Combine(root, imagen);
             PictureBox p = new PictureBox();//se crea un picturebox para la imagen falta poner el sourec
             p.Size = new Size(250, 250);
             p.SizeMode = PictureBoxSizeMode.Zoom;
-            p.Name = "alo";
-            Bitmap MyImage = new Bitmap("C:/Users/andre/Pictures/io.jpg");
+            Bitmap MyImage = new Bitmap(img_2add);
             p.Image = (Image)MyImage;
-            PanelTopicos.RowCount++;
+            //PanelTopicos.RowCount++;
             //PanelTopicos.RowStyles.Add(new RowStyle());
-            PanelTopicos.Controls.Add(p, 0, PanelTopicos.RowCount - 1);//agrega la imagen en la columna0
+            PanelTopicos.Controls.Add(p);//agrega la imagen en la columna0
         }
 
 
@@ -144,24 +71,18 @@ namespace forumCliente
             Console.WriteLine("Connecting.....");
             try
             {
-                NetworkStream stream = tcpclnt.GetStream();
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes("1");
-                stream.Write(data, 0, data.Length);
-
-                string mod = topic;
                 TcpClient tcpclnt = new TcpClient();
                 tcpclnt.Connect(ipAd, PortNumber);
-                data = System.Text.Encoding.ASCII.GetBytes(mod);
-
-                // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
-               
-                
-                // Send the message to the connected TcpServer. 
+                NetworkStream stream = tcpclnt.GetStream();
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes("0");
                 stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sent: {0}", mod);
+                data = new Byte[256];
+                data = System.Text.Encoding.ASCII.GetBytes(topic);
+
+                stream.Write(data, 0, data.Length);
+
+                Console.WriteLine("Sent: {0}", topic);
 
                 // Receive the TcpServer.response.
 
@@ -174,8 +95,15 @@ namespace forumCliente
                 string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                 Console.WriteLine("Received: {0}", responseData);
                 // Close everything.
+                data = new Byte[256];
+                data = System.Text.Encoding.ASCII.GetBytes("3Salir");
+
+                stream.Write(data, 0, data.Length);
                 stream.Close();
                 tcpclnt.Close();
+                jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
+                jsonRecibidoArray = JsonConvert.DeserializeObject<Topico[]>(responseData);//convierte el json a objetos y los guarda en el arreglo
+
 
             }
             catch (Exception ex)
@@ -183,6 +111,65 @@ namespace forumCliente
                 Console.WriteLine(ex);
             }
         }
+
+        private void getImages()
+        {
+            foreach (var item in jsonRecibidoArray)
+            {
+                string pathString = item.imagen.Substring(1);
+                string[] imageInfo = pathString.Split('/');
+                string subfolder = System.IO.Path.Combine(root, imageInfo[2]);
+                string file = System.IO.Path.Combine(subfolder, imageInfo[3]);
+                if (!Directory.Exists(subfolder))
+                    Directory.CreateDirectory(subfolder);
+                if (!System.IO.File.Exists(file))
+                {
+                    using (System.IO.FileStream fs = System.IO.File.Create(file))
+                    {
+                        try
+                        {
+                            TcpClient tcpclnt = new TcpClient();
+                            tcpclnt.Connect(ipAd, PortNumber);
+                            NetworkStream stream = tcpclnt.GetStream();
+                            Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
+                            stream.Write(data, 0, data.Length);
+                            data = new Byte[1024];
+
+                            // Read the first batch of the TcpServer response bytes.
+                            int bytesRead;
+                            while ((bytesRead = stream.Read(data, 0, data.Length)) > 0){
+                                fs.Write(data, 0, bytesRead);
+                                if (bytesRead < 1024)
+                                    break;
+                            }
+
+                            //  Console.WriteLine("Received: {0}", responseData);
+                            // Close everything.
+                            data = new Byte[256];
+                            data = System.Text.Encoding.ASCII.GetBytes("3Salir");
+
+                            stream.Write(data, 0, data.Length);
+                            stream.Close();
+                            tcpclnt.Close();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+                
+            }
+            
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
 
         private void label1_Click(object sender, EventArgs e)
         {

@@ -26,16 +26,26 @@ def newPost():
 		topicos["tecnologia"].append(data)
 	conn.sendall(b'succes')
 
-def sendForum():
-	forum = conn.recv(1024).decode()
+def sendForum(forum):
+	print('Topico:' + forum)
 	if forum == 'perritos':
 		dataToSend = json.dumps(topicos['perritos'])
 	elif forum == 'tecnologia':
 		dataToSend = json.dumps(topicos['tecnologia'])
-	conn.sendall(dataToSend)
+	conn.sendall(dataToSend.encode())
 
+def askPhotos(photo):
+	print('\nSending photo: ' + photo, end='')
+	f = open(photo, 'rb')
+	chonk = f.read(1024)
+	while chonk: 
+		conn.sendall(chonk)
+		chonk = f.read(1024)
+		print('', end='.')
+	print(' Done')
+        
 if not os.path.exists(ServerDirectory):
-		os.mkdir(ServerDirectory)
+		os.mkdir(ServerDirectory)   
 if os.path.isfile('topicos.json'):
 	with open('topicos.json', 'r') as outfile:
 		topicos = json.load(outfile)
@@ -52,23 +62,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	fileList = os.listdir(ServerDirectory)
 	switcher = {
 		0: sendForum,
-		1: newPost
+		1: newPost,
+        2: askPhotos
 	}
 	print('Welcome to the Forummy')
+	option = -1
+	topicStrema = ''
 	while True:
 		conn, addr = s.accept()
 		with conn:
 			print('Direccion', addr)
 			while True:
 				if option < 0:
-					option = int(conn.recv(1024).decode())
+					strAux = conn.recv(256).decode()
+					option = int(strAux[0])
+					topicStrema = strAux[1:]
 				elif option >= 3:
 					option = -1
+					print('Cliente desconectado')
 					break
 				else:
-					switcher[option]()
+					switcher[option](topicStrema)
 					option = -1
-			#while True:	
 	s.close()
 	with open('topicos.json', 'w') as outfile:
 		json.dump(topicos, outfile)

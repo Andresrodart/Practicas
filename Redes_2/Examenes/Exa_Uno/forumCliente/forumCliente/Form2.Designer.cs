@@ -36,7 +36,7 @@
             this.panelBusqueda = new System.Windows.Forms.Panel();
             this.buscar = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.PanelTopicos = new System.Windows.Forms.TableLayoutPanel();
+            this.PanelTopicos = new System.Windows.Forms.FlowLayoutPanel();
             this.PanelAgregar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panelBusqueda.SuspendLayout();
@@ -127,25 +127,20 @@
             // PanelTopicos
             // 
             this.PanelTopicos.AutoScroll = true;
-            this.PanelTopicos.ColumnCount = 1;
-            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.PanelTopicos.Location = new System.Drawing.Point(25, 25);
+            this.PanelTopicos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PanelTopicos.Location = new System.Drawing.Point(33, 12);
             this.PanelTopicos.Name = "PanelTopicos";
-            this.PanelTopicos.RowCount = 1;
-            this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelTopicos.Size = new System.Drawing.Size(663, 589);
-            this.PanelTopicos.TabIndex = 1;
-            this.PanelTopicos.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
+            this.PanelTopicos.Size = new System.Drawing.Size(592, 593);
+            this.PanelTopicos.TabIndex = 5;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 744);
+            this.Controls.Add(this.PanelTopicos);
             this.Controls.Add(this.panelBusqueda);
             this.Controls.Add(this.PanelAgregar);
-            this.Controls.Add(this.PanelTopicos);
             this.Name = "Form2";
             this.Text = "Form2";
             this.PanelAgregar.ResumeLayout(false);
@@ -166,6 +161,6 @@
         private System.Windows.Forms.Panel panelBusqueda;
         private System.Windows.Forms.Button buscar;
         private System.Windows.Forms.TextBox textBox2;
-        public System.Windows.Forms.TableLayoutPanel PanelTopicos;
+        private System.Windows.Forms.FlowLayoutPanel PanelTopicos;
     }
 }
