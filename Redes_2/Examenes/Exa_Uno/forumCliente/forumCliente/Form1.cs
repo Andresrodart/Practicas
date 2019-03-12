@@ -9,11 +9,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace forumCliente
 {
     public partial class Form1 : Form
     {
+        
         IPAddress ipAd = IPAddress.Parse("127.0.0.1");
         int PortNumber = 65432;
         Byte[] data = new Byte[256];
@@ -23,6 +25,7 @@ namespace forumCliente
             InitializeComponent();
             userName = Prompt.ShowDialog("Ingrese su nombre de usuario", "Forum");
             System.Console.WriteLine(userName);
+            
             //getTopics();
         }
 
@@ -69,7 +72,10 @@ namespace forumCliente
 
         private void perritos_Click(object sender, EventArgs e)
         {
-
+            //this.Hide();
+            Form2 f2 = new Form2(userName,"json");
+            f2.ShowDialog();
+            
         }
 
         private void tecno_Click(object sender, EventArgs e)

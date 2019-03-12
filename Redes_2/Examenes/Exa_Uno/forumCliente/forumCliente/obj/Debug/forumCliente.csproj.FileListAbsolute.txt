@@ -8,3 +8,8 @@ D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug
 D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.csproj.CoreCompileInputs.cache
 D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.exe
 D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.pdb
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.Form2.resources
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\Newtonsoft.Json.dll
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\Newtonsoft.Json.pdb
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\bin\Debug\Newtonsoft.Json.xml
+D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.csproj.CopyComplete
