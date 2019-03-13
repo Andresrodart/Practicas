@@ -22,11 +22,14 @@ namespace forumCliente
         public string userName = "userHolder";
         Topico[] jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
         string root = @"C:\imagesServer";
-
+        string sourceFile = "";
+        string topic = "";
         public Form2(String usuario, String topic)
         {
             InitializeComponent();
-            getTopics(topic);                           //Obtener posts 
+            userName = usuario;
+            this.topic = topic;
+            getTopics();                           //Obtener posts 
             foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
                 AddItem(t); 
             getImages();                                //Buscamos si tenemos la simagenes
@@ -60,13 +63,11 @@ namespace forumCliente
             p.SizeMode = PictureBoxSizeMode.Zoom;
             Bitmap MyImage = new Bitmap(img_2add);
             p.Image = (Image)MyImage;
-            //PanelTopicos.RowCount++;
-            //PanelTopicos.RowStyles.Add(new RowStyle());
             PanelTopicos.Controls.Add(p);//agrega la imagen en la columna0
         }
 
 
-        private void getTopics(string topic)
+        private void getTopics()
         {
             Console.WriteLine("Connecting.....");
             try
@@ -164,6 +165,76 @@ namespace forumCliente
             
         }
 
+        private void agregar_Click(object sender, EventArgs e)
+        {
+            string[] fecha = DateTime.Now.Date.ToString().Split(' ');
+            Topico _2Send = new Topico();
+            _2Send.usuario = userName;
+            _2Send.titulo = tituloLabel.Text;
+            _2Send.fecha = fecha[0];
+            _2Send.imagen = (sourceFile != "")? "./imagesServer/" + fecha[1] + Path.GetFileName(sourceFile): sourceFile;
+            _2Send.texto = mensajeSend.Text;
+            string JsonToSend = JsonConvert.SerializeObject(_2Send);
+            Console.WriteLine(JsonToSend);
+
+            if (_2Send.titulo == "" && _2Send.texto == "")
+            {
+                MessageBox.Show("Campos vacíos");
+            }
+            else
+            {
+                Console.WriteLine("Connecting.....");
+                try
+                {
+                    TcpClient tcpclnt = new TcpClient();
+                    tcpclnt.Connect(ipAd, PortNumber);
+                    NetworkStream stream = tcpclnt.GetStream();
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes("1"+topic);
+                    stream.Write(data, 0, data.Length);
+
+                    data = new Byte[1024];
+                    data = System.Text.Encoding.ASCII.GetBytes(JsonToSend);
+
+                    stream.Write(data, 0, data.Length);
+
+                    data = new Byte[256];
+
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Console.WriteLine("Received: {0}", responseData);
+                    // Close everything.
+                    data = new Byte[256];
+                    data = System.Text.Encoding.ASCII.GetBytes("3Salir");
+
+                    stream.Write(data, 0, data.Length);
+                    stream.Close();
+                    tcpclnt.Close();
+                    jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
+                    jsonRecibidoArray = JsonConvert.DeserializeObject<Topico[]>(responseData);//convierte el json a objetos y los guarda en el arreglo
+
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+        }
+
+        private void AgregarImagen_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Files|*.jpg;*.jpeg;*.png";
+            dialog.InitialDirectory = @"C:\";
+            dialog.Title = "Please select an image file";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                sourceFile = dialog.FileName;
+                Console.WriteLine(sourceFile);
+            }
+        }
+
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -202,6 +273,11 @@ namespace forumCliente
         }
 
         private void label1_Click_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }

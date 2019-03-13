@@ -16,15 +16,21 @@ ServerDirectory = './imagesServer'
 post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
 topicos = {"perritos":[post],"tecnologia":[post]}
 
-def newPost():
-	forum = conn.recv(1024).decode()
-	newPost = post
+def newPost(forum):
 	data = json.loads(conn.recv(1024).decode())
 	if forum == 'perritos':
 		topicos["perritos"].append(data)
 	elif forum == 'tecnologia':
 		topicos["tecnologia"].append(data)
-	conn.sendall(b'succes')
+	#conn.sendall(b'succes')
+	if data["imagen"] != '':
+		f = open(data["imagen"], 'wb')
+		data = conn.recv(1024)
+		while data:
+			data = conn.recv(1024)
+            f.write(data)
+		    if len(data) < 1024:
+				break
 
 def sendForum(forum):
 	print('Topico:' + forum)

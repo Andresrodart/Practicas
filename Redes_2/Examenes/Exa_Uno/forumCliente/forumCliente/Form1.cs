@@ -25,9 +25,10 @@ namespace forumCliente
         {
             InitializeComponent();
             userName = Prompt.ShowDialog("Ingrese su nombre de usuario", "Forum");
+            while (userName == "")
+                userName = Prompt.ShowDialog("Ingrese su nombre de usuario", "Forum");
             System.Console.WriteLine(userName);
             string root = @"C:\imagesServer";
-            string subdir = @"C:\Temp\";
             // If directory does not exist, create it. 
             if (!Directory.Exists(root))
             {
