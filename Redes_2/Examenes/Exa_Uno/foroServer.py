@@ -17,6 +17,7 @@ post = {"usuario":"", "titulo": "", "texto": "","imagen":"","fecha":""}
 topicos = {"perritos":[post],"tecnologia":[post]}
 
 def newPost(forum):
+	print("Reciving new post: ", forum)
 	data = json.loads(conn.recv(1024).decode())
 	if forum == 'perritos':
 		topicos["perritos"].append(data)
@@ -24,13 +25,17 @@ def newPost(forum):
 		topicos["tecnologia"].append(data)
 	#conn.sendall(b'succes')
 	if data["imagen"] != '':
+		print('Reciving image')
 		f = open(data["imagen"], 'wb')
 		data = conn.recv(1024)
 		while data:
 			data = conn.recv(1024)
-            f.write(data)
-		    if len(data) < 1024:
+			f.write(data)
+			print('', end='.')
+			if len(data) < 1024:
 				break
+				print(' Done')
+    
 
 def sendForum(forum):
 	print('Topico:' + forum)
@@ -42,6 +47,7 @@ def sendForum(forum):
 
 def askPhotos(photo):
 	print('\nSending photo: ' + photo, end='')
+	conn.sendall(b'start')
 	f = open(photo, 'rb')
 	chonk = f.read(1024)
 	while chonk: 

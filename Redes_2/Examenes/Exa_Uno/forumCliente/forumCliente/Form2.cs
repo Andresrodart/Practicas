@@ -135,7 +135,7 @@ namespace forumCliente
                             Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
                             stream.Write(data, 0, data.Length);
                             data = new Byte[1024];
-
+                            
                             // Read the first batch of the TcpServer response bytes.
                             int bytesRead;
                             while ((bytesRead = stream.Read(data, 0, data.Length)) > 0){
@@ -192,17 +192,43 @@ namespace forumCliente
                     Byte[] data = System.Text.Encoding.ASCII.GetBytes("1"+topic);
                     stream.Write(data, 0, data.Length);
 
-                    data = new Byte[1024];
-                    data = System.Text.Encoding.ASCII.GetBytes(JsonToSend);
 
+                    data = new Byte[1024];
+                    stream.Read(data, 0, data.Length);
+                    //data = new Byte[1024];
+
+                    data = System.Text.Encoding.ASCII.GetBytes(JsonToSend);
                     stream.Write(data, 0, data.Length);
 
                     data = new Byte[256];
 
-                    // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Console.WriteLine("Received: {0}", responseData);
+                    if (sourceFile != "")
+                    {
+                        Byte [] imgeByArr = File.ReadAllBytes(sourceFile);
+                        int bufferSize = 1024;
+                        // Build the package
+                        byte[] dataLength = BitConverter.GetBytes(imgeByArr.Length);
+                        byte[] package = new byte[4 + imgeByArr.Length];
+                        dataLength.CopyTo(package, 0);
+                        imgeByArr.CopyTo(package, 4);
+
+                        // Send to server
+                        int bytesSent = 0;
+                        int bytesLeft = package.Length;
+
+                        while (bytesLeft > 0)
+                        {
+
+                            int nextPacketSize = (bytesLeft > bufferSize) ? bufferSize : bytesLeft;
+
+                            stream.Write(package, bytesSent, nextPacketSize);
+                            bytesSent += nextPacketSize;
+                            bytesLeft -= nextPacketSize;
+
+                        }
+
+                    }
+
                     // Close everything.
                     data = new Byte[256];
                     data = System.Text.Encoding.ASCII.GetBytes("3Salir");
@@ -210,9 +236,6 @@ namespace forumCliente
                     stream.Write(data, 0, data.Length);
                     stream.Close();
                     tcpclnt.Close();
-                    jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
-                    jsonRecibidoArray = JsonConvert.DeserializeObject<Topico[]>(responseData);//convierte el json a objetos y los guarda en el arreglo
-
 
                 }
                 catch (Exception ex)
