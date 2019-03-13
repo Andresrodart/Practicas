@@ -50,7 +50,8 @@ namespace forumCliente
 
         private void tecno_Click(object sender, EventArgs e)
         {
-
+            Form2 f2 = new Form2(userName, "tecnologia");
+            f2.ShowDialog();
         }
     }
 }

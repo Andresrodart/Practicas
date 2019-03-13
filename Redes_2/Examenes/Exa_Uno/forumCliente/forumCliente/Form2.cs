@@ -215,7 +215,7 @@ namespace forumCliente
                     NetworkStream stream = tcpclnt.GetStream();
                     Byte[] data = System.Text.Encoding.ASCII.GetBytes("1"+topic);
                     stream.Write(data, 0, data.Length);
-
+                    Console.WriteLine("Se envio : "+"1"+topic);
 
                     data = new Byte[1024];
                     Int32 bytes = stream.Read(data, 0, data.Length);
@@ -337,6 +337,11 @@ namespace forumCliente
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
         {
 
         }

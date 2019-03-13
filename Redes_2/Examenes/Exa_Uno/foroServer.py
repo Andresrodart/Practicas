@@ -25,11 +25,11 @@ def newPost(forum):
 		topicos["perritos"].append(data)
 	elif forum == 'tecnologia':
 		topicos["tecnologia"].append(data)
-	
+
 	if data["imagen"] != '':
 		print('Reciving image')
 		if not os.path.exists(ServerDirectory + '/' + data["imagen"].split('/')[2]):
-			os.mkdir(ServerDirectory + '/' +  data["imagen"].split('/')[2]) 
+			os.mkdir(ServerDirectory + '/' +  data["imagen"].split('/')[2])
 		f = open(data["imagen"], 'wb')
 		data = conn.recv(1024)
 		while data:
@@ -39,8 +39,8 @@ def newPost(forum):
 			if len(data) < 1024:
 				break
 		f.close()
-		print(' Done')
-		conn.sendall(b'done')
+	print(' Done')
+	conn.sendall(b'done')
     
 
 def sendForum(forum):

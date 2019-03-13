@@ -30,15 +30,15 @@
         {
             this.PanelAgregar = new System.Windows.Forms.TableLayoutPanel();
             this.tituloLabel = new System.Windows.Forms.TextBox();
-            this.AgregarImagen = new System.Windows.Forms.Button();
             this.agregar = new System.Windows.Forms.Button();
             this.mensajeSend = new System.Windows.Forms.TextBox();
+            this.AgregarImagen = new System.Windows.Forms.Button();
             this.panelBusqueda = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.buscar = new System.Windows.Forms.Button();
             this.PanelTopicos = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.PanelAgregar.SuspendLayout();
             this.panelBusqueda.SuspendLayout();
             this.SuspendLayout();
@@ -72,17 +72,6 @@
             this.tituloLabel.Size = new System.Drawing.Size(180, 47);
             this.tituloLabel.TabIndex = 3;
             // 
-            // AgregarImagen
-            // 
-            this.AgregarImagen.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.AgregarImagen.Location = new System.Drawing.Point(567, 9);
-            this.AgregarImagen.Name = "AgregarImagen";
-            this.AgregarImagen.Size = new System.Drawing.Size(68, 42);
-            this.AgregarImagen.TabIndex = 2;
-            this.AgregarImagen.Text = "Agregar Imagen\r\n";
-            this.AgregarImagen.UseVisualStyleBackColor = true;
-            this.AgregarImagen.Click += new System.EventHandler(this.AgregarImagen_Click);
-            // 
             // agregar
             // 
             this.agregar.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -104,6 +93,17 @@
             this.mensajeSend.TabIndex = 0;
             this.mensajeSend.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
+            // AgregarImagen
+            // 
+            this.AgregarImagen.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.AgregarImagen.Location = new System.Drawing.Point(567, 9);
+            this.AgregarImagen.Name = "AgregarImagen";
+            this.AgregarImagen.Size = new System.Drawing.Size(68, 42);
+            this.AgregarImagen.TabIndex = 2;
+            this.AgregarImagen.Text = "Agregar Imagen\r\n";
+            this.AgregarImagen.UseVisualStyleBackColor = true;
+            this.AgregarImagen.Click += new System.EventHandler(this.AgregarImagen_Click);
+            // 
             // panelBusqueda
             // 
             this.panelBusqueda.Controls.Add(this.textBox1);
@@ -112,6 +112,15 @@
             this.panelBusqueda.Name = "panelBusqueda";
             this.panelBusqueda.Size = new System.Drawing.Size(94, 131);
             this.panelBusqueda.TabIndex = 4;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.textBox1.Location = new System.Drawing.Point(3, 6);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(88, 24);
+            this.textBox1.TabIndex = 8;
             // 
             // buscar
             // 
@@ -151,15 +160,6 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Mensaje";
             // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox1.Location = new System.Drawing.Point(3, 6);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(88, 24);
-            this.textBox1.TabIndex = 8;
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +172,7 @@
             this.Controls.Add(this.PanelAgregar);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.PanelAgregar.ResumeLayout(false);
             this.PanelAgregar.PerformLayout();
             this.panelBusqueda.ResumeLayout(false);
