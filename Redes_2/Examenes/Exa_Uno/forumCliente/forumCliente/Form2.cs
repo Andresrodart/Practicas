@@ -30,9 +30,9 @@ namespace forumCliente
             userName = usuario;
             this.topic = topic;
             getTopics();                           //Obtener posts 
+            getImages();                                //Buscamos si tenemos la simagenes
             foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
                 AddItem(t); 
-            getImages();                                //Buscamos si tenemos la simagenes
 
         }
         private void AddItem(Topico t)
@@ -52,24 +52,36 @@ namespace forumCliente
             //PanelTopicos.RowCount++;
             //PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1
             if (t.imagen != "")
-                AddImage(t.imagen.Substring(1));
+                AddImage(t.imagen.Substring(2));
         }
 
         private void AddImage(string imagen)
         {
-            string img_2add = System.IO.Path.Combine(root, imagen);
+            String[] path2Image = new String[imagen.Split('/').Length + 1];
+            path2Image[0] = @"C:\";
+            imagen.Split('/').CopyTo(path2Image, 1);
+            string img_2add = Path.Combine(path2Image);
             PictureBox p = new PictureBox();//se crea un picturebox para la imagen falta poner el sourec
             p.Size = new Size(250, 250);
             p.SizeMode = PictureBoxSizeMode.Zoom;
-            Bitmap MyImage = new Bitmap(img_2add);
-            p.Image = (Image)MyImage;
-            PanelTopicos.Controls.Add(p);//agrega la imagen en la columna0
+            try
+            {
+
+                Bitmap MyImage = new Bitmap(img_2add);
+                p.Image = (Image)MyImage;
+                PanelTopicos.Controls.Add(p);//agrega la imagen en la columna0
+            }
+            catch (Exception)
+            {
+
+            }
+          
         }
 
 
         private void getTopics()
         {
-            Console.WriteLine("Connecting.....");
+            Console.WriteLine("Connecting to get topics.....");
             try
             {
                 TcpClient tcpclnt = new TcpClient();
@@ -88,7 +100,7 @@ namespace forumCliente
                 // Receive the TcpServer.response.
 
                 // Buffer to store the response bytes.
-                data = new Byte[256];
+                data = new Byte[4096];
 
 
                 // Read the first batch of the TcpServer response bytes.
@@ -117,49 +129,61 @@ namespace forumCliente
         {
             foreach (var item in jsonRecibidoArray)
             {
-                string pathString = item.imagen.Substring(1);
-                string[] imageInfo = pathString.Split('/');
-                string subfolder = System.IO.Path.Combine(root, imageInfo[2]);
-                string file = System.IO.Path.Combine(subfolder, imageInfo[3]);
-                if (!Directory.Exists(subfolder))
-                    Directory.CreateDirectory(subfolder);
-                if (!System.IO.File.Exists(file))
+                try
                 {
-                    using (System.IO.FileStream fs = System.IO.File.Create(file))
+                    string pathString = item.imagen.Substring(1);
+                    string[] imageInfo = pathString.Split('/');
+                    string subfolder = System.IO.Path.Combine(root, imageInfo[2]);
+                    string file = System.IO.Path.Combine(subfolder, imageInfo[3]);
+                    if (!Directory.Exists(subfolder))
+                        Directory.CreateDirectory(subfolder);
+                    if (!System.IO.File.Exists(file))
                     {
-                        try
+                        using (System.IO.FileStream fs = System.IO.File.Create(file))
                         {
-                            TcpClient tcpclnt = new TcpClient();
-                            tcpclnt.Connect(ipAd, PortNumber);
-                            NetworkStream stream = tcpclnt.GetStream();
-                            Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
-                            stream.Write(data, 0, data.Length);
-                            data = new Byte[1024];
-                            
-                            // Read the first batch of the TcpServer response bytes.
-                            int bytesRead;
-                            while ((bytesRead = stream.Read(data, 0, data.Length)) > 0){
-                                fs.Write(data, 0, bytesRead);
-                                if (bytesRead < 1024)
-                                    break;
+                            Console.WriteLine("Connecting to get images.....");
+                            try
+                            {
+                                TcpClient tcpclnt = new TcpClient();
+                                tcpclnt.Connect(ipAd, PortNumber);
+                                NetworkStream stream = tcpclnt.GetStream();
+                                Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
+                                stream.Write(data, 0, data.Length);
+                                data = new Byte[1024];
+
+                                // Read the first batch of the TcpServer response bytes.
+                                int bytesRead;
+                                while ((bytesRead = stream.Read(data, 0, data.Length)) > 0)
+                                {
+                                    fs.Write(data, 0, bytesRead);
+                                    Console.WriteLine(bytesRead);
+                                    if (bytesRead < 1024)
+                                        break;
+                                }
+                                Console.WriteLine("Done reciving.....");
+                                //  Console.WriteLine("Received: {0}", responseData);
+                                // Close everything.
+                                data = new Byte[256];
+                                data = System.Text.Encoding.ASCII.GetBytes("3Salir");
+
+                                stream.Write(data, 0, data.Length);
+                                stream.Close();
+                                tcpclnt.Close();
+
                             }
-
-                            //  Console.WriteLine("Received: {0}", responseData);
-                            // Close everything.
-                            data = new Byte[256];
-                            data = System.Text.Encoding.ASCII.GetBytes("3Salir");
-
-                            stream.Write(data, 0, data.Length);
-                            stream.Close();
-                            tcpclnt.Close();
-
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine(ex);
+                }
+                
                 
             }
             
@@ -172,7 +196,7 @@ namespace forumCliente
             _2Send.usuario = userName;
             _2Send.titulo = tituloLabel.Text;
             _2Send.fecha = fecha[0];
-            _2Send.imagen = (sourceFile != "")? "./imagesServer/" + fecha[1] + Path.GetFileName(sourceFile): sourceFile;
+            _2Send.imagen = (sourceFile != "")? "./imagesServer/" + fecha[0].Replace('/', '_') + '/' + Path.GetFileName(sourceFile): sourceFile;
             _2Send.texto = mensajeSend.Text;
             string JsonToSend = JsonConvert.SerializeObject(_2Send);
             Console.WriteLine(JsonToSend);
@@ -194,45 +218,43 @@ namespace forumCliente
 
 
                     data = new Byte[1024];
-                    stream.Read(data, 0, data.Length);
-                    //data = new Byte[1024];
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Console.WriteLine("Received: {0}", responseData);
 
+                    data = new Byte[4096];
                     data = System.Text.Encoding.ASCII.GetBytes(JsonToSend);
                     stream.Write(data, 0, data.Length);
-
-                    data = new Byte[256];
+                    data = new Byte[1024];
 
                     if (sourceFile != "")
                     {
-                        Byte [] imgeByArr = File.ReadAllBytes(sourceFile);
+                        byte[] imgeByArr = ReadImageFile(sourceFile);
                         int bufferSize = 1024;
-                        // Build the package
-                        byte[] dataLength = BitConverter.GetBytes(imgeByArr.Length);
-                        byte[] package = new byte[4 + imgeByArr.Length];
-                        dataLength.CopyTo(package, 0);
-                        imgeByArr.CopyTo(package, 4);
 
                         // Send to server
                         int bytesSent = 0;
-                        int bytesLeft = package.Length;
+                        int bytesLeft = imgeByArr.Length;
 
                         while (bytesLeft > 0)
                         {
+                            int curDataSize = Math.Min(bufferSize, bytesLeft);
 
-                            int nextPacketSize = (bytesLeft > bufferSize) ? bufferSize : bytesLeft;
+                            stream.Write(imgeByArr, bytesSent, curDataSize);
 
-                            stream.Write(package, bytesSent, nextPacketSize);
-                            bytesSent += nextPacketSize;
-                            bytesLeft -= nextPacketSize;
-
+                            bytesSent += curDataSize;
+                            bytesLeft -= curDataSize;
                         }
+                        Console.WriteLine("Done sending image: " + bytesSent);
 
                     }
-
+                    data = new Byte[1024];
+                    bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Console.WriteLine("Received: {0}", responseData);
                     // Close everything.
                     data = new Byte[256];
                     data = System.Text.Encoding.ASCII.GetBytes("3Salir");
-
                     stream.Write(data, 0, data.Length);
                     stream.Close();
                     tcpclnt.Close();
@@ -258,7 +280,21 @@ namespace forumCliente
             }
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+
+        private static byte[] ReadImageFile(String img)
+        {
+            FileInfo fileInfo = new FileInfo(img);
+            byte[] buf = new byte[fileInfo.Length];
+            FileStream fs = new FileStream(img, FileMode.Open, FileAccess.Read);
+            fs.Read(buf, 0, buf.Length);
+            fs.Close();
+            //fileInfo.Delete ();
+            GC.ReRegisterForFinalize(fileInfo);
+            GC.ReRegisterForFinalize(fs);
+            return buf;
+        }
+
+            private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

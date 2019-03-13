@@ -18,14 +18,18 @@ topicos = {"perritos":[post],"tecnologia":[post]}
 
 def newPost(forum):
 	print("Reciving new post: ", forum)
-	data = json.loads(conn.recv(1024).decode())
+	conn.sendall(b'start')
+	data = json.loads(conn.recv(4096).decode())
+	print(data)
 	if forum == 'perritos':
 		topicos["perritos"].append(data)
 	elif forum == 'tecnologia':
 		topicos["tecnologia"].append(data)
-	#conn.sendall(b'succes')
+	
 	if data["imagen"] != '':
 		print('Reciving image')
+		if not os.path.exists(ServerDirectory + '/' + data["imagen"].split('/')[2]):
+			os.mkdir(ServerDirectory + '/' +  data["imagen"].split('/')[2]) 
 		f = open(data["imagen"], 'wb')
 		data = conn.recv(1024)
 		while data:
@@ -34,7 +38,9 @@ def newPost(forum):
 			print('', end='.')
 			if len(data) < 1024:
 				break
-				print(' Done')
+		f.close()
+		print(' Done')
+		conn.sendall(b'done')
     
 
 def sendForum(forum):
@@ -47,7 +53,6 @@ def sendForum(forum):
 
 def askPhotos(photo):
 	print('\nSending photo: ' + photo, end='')
-	conn.sendall(b'start')
 	f = open(photo, 'rb')
 	chonk = f.read(1024)
 	while chonk: 
@@ -96,7 +101,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				else:
 					switcher[option](topicStrema)
 					option = -1
+		with open('topicos.json', 'w') as outfile:
+			json.dump(topicos, outfile, indent=4)
+			outfile.close()
 	s.close()
-	with open('topicos.json', 'w') as outfile:
-		json.dump(topicos, outfile)
-		outfile.close()
+	
