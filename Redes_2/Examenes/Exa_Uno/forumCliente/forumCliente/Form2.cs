@@ -265,6 +265,7 @@ namespace forumCliente
                     Console.WriteLine(ex);
                 }
             }
+            getTopics();
         }
 
         private void AgregarImagen_Click(object sender, EventArgs e)

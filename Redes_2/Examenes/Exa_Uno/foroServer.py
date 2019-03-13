@@ -32,6 +32,7 @@ def newPost(forum):
 			os.mkdir(ServerDirectory + '/' +  data["imagen"].split('/')[2])
 		f = open(data["imagen"], 'wb')
 		data = conn.recv(1024)
+		f.write(data)
 		while data:
 			data = conn.recv(1024)
 			f.write(data)

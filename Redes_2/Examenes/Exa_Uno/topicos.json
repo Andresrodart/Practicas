@@ -6,6 +6,20 @@
             "texto": "Hoy vi un lindo cachorro",
             "imagen": "./imagesServer/01_02_03/01.jpg",
             "fecha": "01/02/03"
+        },
+        {
+            "usuario": "Andy",
+            "titulo": "Post Nuevo",
+            "texto": "Miren este memazo",
+            "imagen": "./imagesServer/13_03_2019/20171013_013354000_iOS.jpg",
+            "fecha": "13/03/2019"
+        },
+        {
+            "usuario": "Andy",
+            "titulo": "1meh",
+            "texto": "Ni da risa",
+            "imagen": "",
+            "fecha": "13/03/2019"
         }
     ],
     "tecnologia": [
