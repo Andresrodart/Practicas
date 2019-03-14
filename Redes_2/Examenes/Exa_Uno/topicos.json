@@ -2,7 +2,7 @@
     "perritos": [
         {
             "usuario": "Andres",
-            "titulo": "Mi d\u00c3\u00ada en el zoo",
+            "titulo": "Mi día en el zoo",
             "texto": "Hoy vi un lindo cachorro",
             "imagen": "./imagesServer/01_02_03/01.jpg",
             "fecha": "01/02/03"
@@ -16,7 +16,7 @@
         },
         {
             "usuario": "Andy",
-            "titulo": "1meh",
+            "titulo": "Meh",
             "texto": "Ni da risa",
             "imagen": "",
             "fecha": "13/03/2019"

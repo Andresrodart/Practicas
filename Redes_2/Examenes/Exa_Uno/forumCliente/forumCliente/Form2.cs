@@ -26,6 +26,8 @@ namespace forumCliente
         string root = @"C:\imagesServer";
         string sourceFile = "";
         string topic = "";
+        TableLayoutPanel PanelTopicos = new TableLayoutPanel();
+
         public Form2(String usuario, String topic)
         {
             InitializeComponent();
@@ -33,6 +35,10 @@ namespace forumCliente
             userName = usuario;
             getTopics(topic);                           //Obtener posts
             int aux = 0;
+            PanelTopicos.AutoScroll = PanelTopicos.AutoSize = true;
+            PanelTopicos.RowCount = 1;
+            panel1.Controls.Add(PanelTopicos);
+
             foreach (var item in jsonRecibidoArray)
             {
                 Console.WriteLine(aux);
@@ -45,15 +51,30 @@ namespace forumCliente
         }
         private void AddItem(Topico t)
         {
+            Label tlt = new Label();//el label usuario
+            tlt.Font = new Font("Arial", 12, FontStyle.Bold);
+            tlt.Text = "Titulo: " + t.titulo.Trim();
+            tlt.AutoSize = true;
+            tlt.Margin = new Padding(0, 16, 0, 0);
             Label usr = new Label();//el label usuario
-            usr.Font = new Font("Arial", 12, FontStyle.Bold);
-            usr.Text = "Usuario: " + t.usuario;
+            usr.Font = new Font("Arial", 7, FontStyle.Bold);
+            usr.Text = "Usuario: " + t.usuario.Trim();
             usr.AutoSize = true;
+            usr.Margin = new Padding(4, 0, 0, 0);
+            Label dt = new Label();//el label usuario
+            dt.Font = new Font("Arial", 5, FontStyle.Regular);
+            dt.Text = "Usuario: " + t.fecha.Trim();
+            dt.AutoSize = true;
+            dt.Margin = new Padding(4, 0, 0, 0);
             Label txt = new Label();//el label texto
-            txt.Text = t.texto;
+            txt.Text = t.texto.Trim();
+            txt.Font = new Font("Arial", 12, FontStyle.Regular);
+            txt.Margin = new Padding(8, 8, 8, 8);
             txt.AutoSize = true;
+            PanelTopicos.Controls.Add(dt, 0, PanelTopicos.RowCount - 1);
             PanelTopicos.Controls.Add(txt, 0, PanelTopicos.RowCount - 1);//se agregan los dos labels al panel
-            PanelTopicos.Controls.Add(usr,0, PanelTopicos.RowCount - 1);
+            PanelTopicos.Controls.Add(tlt, 0, PanelTopicos.RowCount - 1);
+            PanelTopicos.Controls.Add(usr, 0, PanelTopicos.RowCount - 1);
             PanelTopicos.RowCount++;
             //PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1
             if (t.imagen != "")
@@ -106,7 +127,8 @@ namespace forumCliente
                 data = new Byte[4096];
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                UTF8Encoding utf8 = new UTF8Encoding();
+                string responseData = utf8.GetString(data);
                 Console.WriteLine("Received: {0}", responseData);
 
                 data = new Byte[256];
@@ -229,7 +251,7 @@ namespace forumCliente
                     Console.WriteLine("Received: {0}", responseData);
 
                     data = new Byte[4096];
-                    data = System.Text.Encoding.ASCII.GetBytes(JsonToSend);
+                    data = System.Text.Encoding.UTF8.GetBytes(JsonToSend);
                     stream.Write(data, 0, data.Length);
                     data = new Byte[1024];
 

@@ -39,12 +39,10 @@
             this.buscar = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.PanelTopicos = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.reload = new System.Windows.Forms.Timer(this.components);
             this.PanelAgregar.SuspendLayout();
             this.panelBusqueda.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // PanelAgregar
@@ -156,25 +154,9 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Mensaje";
             // 
-            // PanelTopicos
-            // 
-            this.PanelTopicos.AutoSize = true;
-            this.PanelTopicos.ColumnCount = 1;
-            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.PanelTopicos.Location = new System.Drawing.Point(26, 42);
-            this.PanelTopicos.Name = "PanelTopicos";
-            this.PanelTopicos.RowCount = 1;
-            this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.PanelTopicos.Size = new System.Drawing.Size(558, 114);
-            this.PanelTopicos.TabIndex = 8;
-            this.PanelTopicos.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelTopicos_Paint);
-            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.PanelTopicos);
             this.panel1.Location = new System.Drawing.Point(28, 25);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(618, 550);
@@ -203,8 +185,6 @@
             this.PanelAgregar.PerformLayout();
             this.panelBusqueda.ResumeLayout(false);
             this.panelBusqueda.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -221,7 +201,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox clave;
-        private System.Windows.Forms.TableLayoutPanel PanelTopicos;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Timer reload;
     }

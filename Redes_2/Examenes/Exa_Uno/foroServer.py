@@ -50,7 +50,7 @@ def sendForum(forum):
 		dataToSend = json.dumps(topicos['perritos'])
 	elif forum == 'tecnologia':
 		dataToSend = json.dumps(topicos['tecnologia'])
-	conn.sendall(dataToSend.encode())
+	conn.sendall(dataToSend.encode('utf8'))
 
 def askPhotos(photo):
 	print('\nSending photo: ' + photo, end='')
@@ -65,11 +65,11 @@ def askPhotos(photo):
 if not os.path.exists(ServerDirectory):
 		os.mkdir(ServerDirectory)   
 if os.path.isfile('topicos.json'):
-	with open('topicos.json', 'r') as outfile:
+	with open('topicos.json', 'r', encoding='utf-8') as outfile:
 		topicos = json.load(outfile)
 		outfile.close()
 else:
-	with open('topicos.json', 'w') as outfile:
+	with open('topicos.json', 'w', encoding='utf-8') as outfile:
 		json.dump(topicos, outfile)
 		outfile.close()
 
@@ -102,8 +102,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				else:
 					switcher[option](topicStrema)
 					option = -1
-		with open('topicos.json', 'w') as outfile:
-			json.dump(topicos, outfile, indent=4)
+		with open('topicos.json', 'w', encoding='utf8') as outfile:
+			json.dump(topicos, outfile, indent=4, ensure_ascii=False)
 			outfile.close()
 	s.close()
 	
