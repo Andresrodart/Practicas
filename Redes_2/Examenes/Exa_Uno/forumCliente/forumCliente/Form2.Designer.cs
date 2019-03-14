@@ -36,11 +36,13 @@
             this.panelBusqueda = new System.Windows.Forms.Panel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buscar = new System.Windows.Forms.Button();
-            this.PanelTopicos = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.PanelTopicos = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.PanelAgregar.SuspendLayout();
             this.panelBusqueda.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // PanelAgregar
@@ -131,15 +133,6 @@
             this.buscar.Text = "buscar";
             this.buscar.UseVisualStyleBackColor = true;
             // 
-            // PanelTopicos
-            // 
-            this.PanelTopicos.AutoScroll = true;
-            this.PanelTopicos.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.PanelTopicos.Location = new System.Drawing.Point(25, 12);
-            this.PanelTopicos.Name = "PanelTopicos";
-            this.PanelTopicos.Size = new System.Drawing.Size(600, 593);
-            this.PanelTopicos.TabIndex = 5;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -160,14 +153,37 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Mensaje";
             // 
+            // PanelTopicos
+            // 
+            this.PanelTopicos.AutoSize = true;
+            this.PanelTopicos.ColumnCount = 1;
+            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.PanelTopicos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.PanelTopicos.Location = new System.Drawing.Point(26, 42);
+            this.PanelTopicos.Name = "PanelTopicos";
+            this.PanelTopicos.RowCount = 1;
+            this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.PanelTopicos.Size = new System.Drawing.Size(558, 114);
+            this.PanelTopicos.TabIndex = 8;
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.PanelTopicos);
+            this.panel1.Location = new System.Drawing.Point(28, 25);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(618, 550);
+            this.panel1.TabIndex = 9;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 744);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.PanelTopicos);
             this.Controls.Add(this.panelBusqueda);
             this.Controls.Add(this.PanelAgregar);
             this.Name = "Form2";
@@ -177,6 +193,8 @@
             this.PanelAgregar.PerformLayout();
             this.panelBusqueda.ResumeLayout(false);
             this.panelBusqueda.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,10 +207,11 @@
         private System.Windows.Forms.Button AgregarImagen;
         private System.Windows.Forms.Panel panelBusqueda;
         private System.Windows.Forms.Button buscar;
-        private System.Windows.Forms.FlowLayoutPanel PanelTopicos;
         private System.Windows.Forms.TextBox tituloLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TableLayoutPanel PanelTopicos;
+        private System.Windows.Forms.Panel panel1;
     }
 }

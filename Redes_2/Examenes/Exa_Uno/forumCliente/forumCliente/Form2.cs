@@ -21,6 +21,7 @@ namespace forumCliente
         Byte[] data = new Byte[256];
         public string userName = "userHolder";
         Topico[] jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
+        int[] auxPostExist = new int[100];
         string root = @"C:\imagesServer";
         string sourceFile = "";
         string topic = "";
@@ -30,10 +31,6 @@ namespace forumCliente
             userName = usuario;
             this.topic = topic;
             getTopics();                           //Obtener posts 
-            getImages();                                //Buscamos si tenemos la simagenes
-            foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
-                AddItem(t); 
-
         }
         private void AddItem(Topico t)
         {
@@ -44,12 +41,9 @@ namespace forumCliente
             Label txt = new Label();//el label texto
             txt.Text = t.texto;
             txt.AutoSize = true;
-
-            PanelTopicos.Controls.Add(usr);
-            PanelTopicos.Controls.Add(txt);//se agregan los dos labels al panel
-            //pa.FlowDirection = FlowDirection.TopDown;
-
-            //PanelTopicos.RowCount++;
+            PanelTopicos.Controls.Add(txt, 0, PanelTopicos.RowCount - 1);//se agregan los dos labels al panel
+            PanelTopicos.Controls.Add(usr,0, PanelTopicos.RowCount - 1);
+            PanelTopicos.RowCount++;
             //PanelTopicos.Controls.Add(pa, 0, PanelTopicos.RowCount - 1);//se agrega el panel en columna1
             if (t.imagen != "")
                 AddImage(t.imagen.Substring(2));
@@ -69,7 +63,8 @@ namespace forumCliente
 
                 Bitmap MyImage = new Bitmap(img_2add);
                 p.Image = (Image)MyImage;
-                PanelTopicos.Controls.Add(p);//agrega la imagen en la columna0
+                PanelTopicos.RowCount++;
+                PanelTopicos.Controls.Add(p, 0, PanelTopicos.RowCount - 2);//agrega la imagen en la columna0
             }
             catch (Exception)
             {
@@ -87,27 +82,22 @@ namespace forumCliente
                 TcpClient tcpclnt = new TcpClient();
                 tcpclnt.Connect(ipAd, PortNumber);
                 NetworkStream stream = tcpclnt.GetStream();
+
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes("0");
                 stream.Write(data, 0, data.Length);
 
                 data = new Byte[256];
                 data = System.Text.Encoding.ASCII.GetBytes(topic);
-
                 stream.Write(data, 0, data.Length);
-
                 Console.WriteLine("Sent: {0}", topic);
-
-                // Receive the TcpServer.response.
 
                 // Buffer to store the response bytes.
                 data = new Byte[4096];
-
-
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                 Console.WriteLine("Received: {0}", responseData);
-                // Close everything.
+
                 data = new Byte[256];
                 data = System.Text.Encoding.ASCII.GetBytes("3Salir");
 
@@ -123,68 +113,75 @@ namespace forumCliente
             {
                 Console.WriteLine(ex);
             }
+            getImages();                                //Buscamos si tenemos la simagenes
+            foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
+                AddItem(t);
+
         }
 
         private void getImages()
         {
             foreach (var item in jsonRecibidoArray)
             {
-                try
+                if (item.imagen != "")
                 {
-                    string pathString = item.imagen.Substring(1);
-                    string[] imageInfo = pathString.Split('/');
-                    string subfolder = System.IO.Path.Combine(root, imageInfo[2]);
-                    string file = System.IO.Path.Combine(subfolder, imageInfo[3]);
-                    if (!Directory.Exists(subfolder))
-                        Directory.CreateDirectory(subfolder);
-                    if (!System.IO.File.Exists(file))
+                    try
                     {
-                        using (System.IO.FileStream fs = System.IO.File.Create(file))
+                        string pathString = item.imagen.Substring(1);
+                        string[] imageInfo = pathString.Split('/');
+                        string subfolder = System.IO.Path.Combine(root, imageInfo[2]);
+                        string file = System.IO.Path.Combine(subfolder, imageInfo[3]);
+                        if (!Directory.Exists(subfolder))
+                            Directory.CreateDirectory(subfolder);
+                        if (!System.IO.File.Exists(file))
                         {
-                            Console.WriteLine("Connecting to get images.....");
-                            try
+                            using (System.IO.FileStream fs = System.IO.File.Create(file))
                             {
-                                TcpClient tcpclnt = new TcpClient();
-                                tcpclnt.Connect(ipAd, PortNumber);
-                                NetworkStream stream = tcpclnt.GetStream();
-                                Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
-                                stream.Write(data, 0, data.Length);
-                                data = new Byte[1024];
-
-                                // Read the first batch of the TcpServer response bytes.
-                                int bytesRead;
-                                while ((bytesRead = stream.Read(data, 0, data.Length)) > 0)
+                                Console.WriteLine("Connecting to get images.....");
+                                try
                                 {
-                                    fs.Write(data, 0, bytesRead);
-                                    Console.WriteLine(bytesRead);
-                                    if (bytesRead < 1024)
-                                        break;
+                                    TcpClient tcpclnt = new TcpClient();
+                                    tcpclnt.Connect(ipAd, PortNumber);
+                                    NetworkStream stream = tcpclnt.GetStream();
+                                    Byte[] data = System.Text.Encoding.ASCII.GetBytes('2' + item.imagen);
+                                    stream.Write(data, 0, data.Length);
+                                    data = new Byte[1024];
+
+                                    // Read the first batch of the TcpServer response bytes.
+                                    int bytesRead;
+                                    while ((bytesRead = stream.Read(data, 0, data.Length)) > 0)
+                                    {
+                                        fs.Write(data, 0, bytesRead);
+                                        Console.WriteLine(bytesRead);
+                                        if (bytesRead < 1024)
+                                            break;
+                                    }
+                                    Console.WriteLine("Done reciving.....");
+                                    //  Console.WriteLine("Received: {0}", responseData);
+                                    // Close everything.
+                                    data = new Byte[256];
+                                    data = System.Text.Encoding.ASCII.GetBytes("3Salir");
+
+                                    stream.Write(data, 0, data.Length);
+                                    stream.Close();
+                                    tcpclnt.Close();
+
                                 }
-                                Console.WriteLine("Done reciving.....");
-                                //  Console.WriteLine("Received: {0}", responseData);
-                                // Close everything.
-                                data = new Byte[256];
-                                data = System.Text.Encoding.ASCII.GetBytes("3Salir");
-
-                                stream.Write(data, 0, data.Length);
-                                stream.Close();
-                                tcpclnt.Close();
-
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex);
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex);
+                                }
                             }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
+                    catch (Exception ex)
+                    {
 
-                    Console.WriteLine(ex);
+                        Console.WriteLine(ex);
+                    }
+
                 }
-                
-                
+
             }
             
         }
