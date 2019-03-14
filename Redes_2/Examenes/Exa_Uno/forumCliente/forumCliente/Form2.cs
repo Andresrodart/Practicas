@@ -16,6 +16,7 @@ namespace forumCliente
 {
     public partial class Form2 : Form
     {
+        string json="";
         IPAddress ipAd = IPAddress.Parse("127.0.0.1");
         int PortNumber = 65435;
         Byte[] data = new Byte[256];
@@ -106,7 +107,7 @@ namespace forumCliente
                 tcpclnt.Close();
                 jsonRecibidoArray = new Topico[100];//se crea el arreglo que va a guardar los objetos sacados del json
                 jsonRecibidoArray = JsonConvert.DeserializeObject<Topico[]>(responseData);//convierte el json a objetos y los guarda en el arreglo
-
+                json = responseData;
 
             }
             catch (Exception ex)
@@ -342,6 +343,17 @@ namespace forumCliente
         private void Form2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void PanelTopicos_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void buscar_Click(object sender, EventArgs e)
+        {
+            Form3 f3 = new Form3(this.topic,json,this.clave.Text);
+            f3.ShowDialog();
         }
     }
 }

@@ -34,7 +34,7 @@
             this.mensajeSend = new System.Windows.Forms.TextBox();
             this.AgregarImagen = new System.Windows.Forms.Button();
             this.panelBusqueda = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.clave = new System.Windows.Forms.TextBox();
             this.buscar = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -108,21 +108,21 @@
             // 
             // panelBusqueda
             // 
-            this.panelBusqueda.Controls.Add(this.textBox1);
+            this.panelBusqueda.Controls.Add(this.clave);
             this.panelBusqueda.Controls.Add(this.buscar);
             this.panelBusqueda.Location = new System.Drawing.Point(694, 25);
             this.panelBusqueda.Name = "panelBusqueda";
             this.panelBusqueda.Size = new System.Drawing.Size(94, 131);
             this.panelBusqueda.TabIndex = 4;
             // 
-            // textBox1
+            // clave
             // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox1.Location = new System.Drawing.Point(3, 6);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(88, 24);
-            this.textBox1.TabIndex = 8;
+            this.clave.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.clave.Location = new System.Drawing.Point(3, 6);
+            this.clave.Multiline = true;
+            this.clave.Name = "clave";
+            this.clave.Size = new System.Drawing.Size(88, 24);
+            this.clave.TabIndex = 8;
             // 
             // buscar
             // 
@@ -132,6 +132,7 @@
             this.buscar.TabIndex = 1;
             this.buscar.Text = "buscar";
             this.buscar.UseVisualStyleBackColor = true;
+            this.buscar.Click += new System.EventHandler(this.buscar_Click);
             // 
             // label1
             // 
@@ -166,6 +167,7 @@
             this.PanelTopicos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.PanelTopicos.Size = new System.Drawing.Size(558, 114);
             this.PanelTopicos.TabIndex = 8;
+            this.PanelTopicos.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelTopicos_Paint);
             // 
             // panel1
             // 
@@ -210,7 +212,7 @@
         private System.Windows.Forms.TextBox tituloLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox clave;
         private System.Windows.Forms.TableLayoutPanel PanelTopicos;
         private System.Windows.Forms.Panel panel1;
     }
