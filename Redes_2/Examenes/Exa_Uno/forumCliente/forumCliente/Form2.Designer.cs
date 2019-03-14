@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.PanelAgregar = new System.Windows.Forms.TableLayoutPanel();
             this.tituloLabel = new System.Windows.Forms.TextBox();
             this.agregar = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.PanelTopicos = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.reload = new System.Windows.Forms.Timer(this.components);
             this.PanelAgregar.SuspendLayout();
             this.panelBusqueda.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -178,6 +180,12 @@
             this.panel1.Size = new System.Drawing.Size(618, 550);
             this.panel1.TabIndex = 9;
             // 
+            // reload
+            // 
+            this.reload.Enabled = true;
+            this.reload.Interval = 1000;
+            this.reload.Tick += new System.EventHandler(this.reload_Tick);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -215,5 +223,6 @@
         private System.Windows.Forms.TextBox clave;
         private System.Windows.Forms.TableLayoutPanel PanelTopicos;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Timer reload;
     }
 }

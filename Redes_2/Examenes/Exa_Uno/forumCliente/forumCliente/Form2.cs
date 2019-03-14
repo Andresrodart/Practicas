@@ -29,9 +29,19 @@ namespace forumCliente
         public Form2(String usuario, String topic)
         {
             InitializeComponent();
-            userName = usuario;
             this.topic = topic;
-            getTopics();                           //Obtener posts 
+            userName = usuario;
+            getTopics(topic);                           //Obtener posts
+            int aux = 0;
+            foreach (var item in jsonRecibidoArray)
+            {
+                Console.WriteLine(aux);
+                auxPostExist[aux] = 1;
+                aux++;
+
+            }
+            foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
+                AddItem(t);
         }
         private void AddItem(Topico t)
         {
@@ -75,7 +85,7 @@ namespace forumCliente
         }
 
 
-        private void getTopics()
+        private void getTopics(string topic)
         {
             Console.WriteLine("Connecting to get topics.....");
             try
@@ -115,8 +125,6 @@ namespace forumCliente
                 Console.WriteLine(ex);
             }
             getImages();                                //Buscamos si tenemos la simagenes
-            foreach (Topico t in jsonRecibidoArray)     //por cada uno de los objetos del arreglo agregamos los posta al banner
-                AddItem(t);
 
         }
 
@@ -263,7 +271,10 @@ namespace forumCliente
                     Console.WriteLine(ex);
                 }
             }
-            getTopics();
+            getNewPost();
+            _2Send.titulo = "";
+            _2Send.texto = "";
+            sourceFile = "";
         }
 
         private void AgregarImagen_Click(object sender, EventArgs e)
@@ -354,6 +365,27 @@ namespace forumCliente
         {
             Form3 f3 = new Form3(this.topic,json,this.clave.Text);
             f3.ShowDialog();
+        }
+
+        private void reload_Tick(object sender, EventArgs e)
+        {
+            getNewPost();
+        }
+
+        private void getNewPost()
+        {
+            getTopics(topic);
+            int aux = 0;
+            foreach (var item in jsonRecibidoArray)
+            {
+                if (auxPostExist[aux] == 0)
+                {
+                    AddItem(item);
+                    auxPostExist[aux] = 1;
+                }
+                aux++;
+            }
+
         }
     }
 }

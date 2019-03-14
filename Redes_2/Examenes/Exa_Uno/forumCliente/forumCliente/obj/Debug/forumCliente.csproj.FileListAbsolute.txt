@@ -44,3 +44,4 @@ C:\Users\andre\Documents\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCl
 C:\Users\andre\Documents\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.exe
 C:\Users\andre\Documents\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.pdb
 D:\REDES2\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.Form3.resources
+A:\Andrés\Repositorios\Practicas\Redes_2\Examenes\Exa_Uno\forumCliente\forumCliente\obj\Debug\forumCliente.Form3.resources
