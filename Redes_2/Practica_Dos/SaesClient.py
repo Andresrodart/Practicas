@@ -281,7 +281,7 @@ class Alumno(QWidget):
 	
 	def sendInfo(self):
 		if self.boleta.text() != '' and self.nombre.text() != '' and self.ApeMate.text() != ''  and self.ApePate.text() != '' and self.group != '' and self.foto_path != '':
-			sock = socket.socket(socket.AF_INET, socket..)
+			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 			server_address = (HOST, PORT)
 			alumno = {
 				"op":'sign',

@@ -31,6 +31,14 @@
             "Gestion 1": ""
         }
     },
+    "0110": {
+        "Grupo": "Grupo 2-B",
+        "Materias": {
+            "Etica 2": "10",
+            "Finanzas 2": "10",
+            "Gestion 2": "10"
+        }
+    },
     "alumnos": [
         {
             "am": "Bishop",
@@ -63,6 +71,14 @@
             "foto": "ejempllo.jpg",
             "group": "Grupo 1-B",
             "name": "Jose"
+        },
+        {
+            "am": "Mora",
+            "ap": "Gonzales",
+            "boleta": "0110",
+            "foto": "20180216_045420781_iOS.jpg",
+            "group": "Grupo 2-B",
+            "name": "Javier"
         }
     ]
 }
