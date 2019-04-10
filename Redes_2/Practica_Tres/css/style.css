@@ -1,0 +1,18 @@
+@import "../node_modules/bulma/css/bulma.min.css";
+:root {
+	--main-color: #ffee52;
+	--sec-color: #e6dd79;
+}
+  
+.main-color{
+	background-color: var(--main-color);
+}
+
+.chat{
+	display: none;
+}
+
+.welcome{
+	background-image: url(../images/background.svg);
+	background-size:cover;
+}
