@@ -1,3 +1,5 @@
+var usrNAme = 'Elizabeth Bishop'
+
 function fade(element, element2Unfade) {
     var op = 1;  // initial opacity
     var timer = setInterval(function () {
@@ -31,6 +33,12 @@ function ingresar(){
 }
 function checkName() {
 	//Aquí checaremos que el nombre no este en uso, si todo cool mostramos la ventana de chat
+	usrNAme = document.getElementById('usrName').value;
 	document.getElementById('chat-area').style.opacity = 0.1;
 	fade(document.getElementById('welcome'), document.getElementById('chat-area'));
+}
+
+function sendMessage() {
+	//Mandar el mensaje por el protoolo UDP
+	
 }
