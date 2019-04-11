@@ -1,18 +1,47 @@
 @import "../node_modules/bulma/css/bulma.min.css";
 :root {
 	--main-color: #ffee52;
-	--sec-color: #e6dd79;
+	--sec-color: #eee79c;
 }
   
 .main-color{
 	background-color: var(--main-color);
 }
+.sec-color{
+	background-color: var(--sec-color);
+}
 
-.chat{
+.start-hidden{
 	display: none;
 }
 
-.welcome{
+body{
 	background-image: url(../images/background.svg);
 	background-size:cover;
+}
+
+section.full-h {
+	width: 100%;
+  	padding: 5% 3%;
+ 	margin: 0;
+  	max-width: none;
+  	height: 100vh;
+}
+
+.vh80{
+	width: 100%;
+  	padding: 2rem 1rem;
+ 	margin: 0;
+	max-width: none;
+ 	height: 80vh;
+}
+
+.radiousBoxL {
+	border-radius: 15px 30px 30px 15px;
+	
+}
+
+.radiousBoxR {
+	border-radius: 30px 15px 15px 30px;
+	background-color: rgba(245,245,245, .3);
 }
