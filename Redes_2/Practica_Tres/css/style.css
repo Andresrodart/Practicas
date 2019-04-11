@@ -37,7 +37,7 @@ section.full-h {
 }
 
 .radiousBoxL {
-	border-radius: 30px 30px;
+	border-radius: 15px 5px 5px 15px;
 	
 }
 
@@ -57,8 +57,22 @@ section.full-h {
 	overflow: auto;
 	overflow-x:hidden;
 	overflow-y:auto;
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: column;
 }
 
 .writeArea{
 	width: 95%;
+}
+
+.message{
+	background-color:rgba(245,245,245, 0)
+}
+.self{
+	text-align: right;
+}
+.message .name {
+	font-size: 1rem;
+	font-weight: bold;
 }

@@ -40,5 +40,37 @@ function checkName() {
 
 function sendMessage() {
 	//Mandar el mensaje por el protoolo UDP
+	let new_msm = messageCreator();
+	document.getElementById('messagess-area').innerHTML = new_msm;
+	document.getElementById('usrMessage').innerHTML = '';
+
+}
+
+function privateMs() {
+	console.log('ejecutar mandar mensaje privado')
+}
+
+function messageCreator(message) {
+	if (message == null){ 
+		return `<div class='message self''>
+					<div class='name'>
+						${usrNAme}
+					</div>
+					<div class='text'>
+						${document.getElementById('usrMessage').value}
+					</div>
+				</div>`;
+	}else{
+		return `<div class = 'message' onclick='privateMs()'>
+			<div class='name'>
+				<!-- <a style="text-decoration: none"> -->
+					${message.user}
+				<!-- </a> -->
+			</div>
+			<div class='text'>
+				${message.text}
+			</div>
+		</div>`
+	}
 	
 }
