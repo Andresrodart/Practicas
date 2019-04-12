@@ -40,8 +40,7 @@ function checkName() {
 
 function sendMessage() {
 	//Mandar el mensaje por el protoolo UDP
-	let new_msm = messageCreator();
-	document.getElementById('messagess-area').innerHTML = new_msm;
+	messageCreator();
 	document.getElementById('usrMessage').innerHTML = '';
 
 }
@@ -51,26 +50,26 @@ function privateMs() {
 }
 
 function messageCreator(message) {
+	let nodeMes = document.createElement("div");
+	let nodeMesName = document.createElement("div");
+	let nodeMesText = document.createElement("div");
+	let name;
+	let mesg;
+
+	nodeMes.classList.add("message");                					// Create a <div> node
+	nodeMesName.classList.add("name");
+	nodeMesText.classList.add("text");
 	if (message == null){ 
-		return `<div class='message self''>
-					<div class='name'>
-						${usrNAme}
-					</div>
-					<div class='text'>
-						${document.getElementById('usrMessage').value}
-					</div>
-				</div>`;
+		name = document.createTextNode(usrNAme);
+		mesg = document.createTextNode(document.getElementById('usrMessage').value);
+		nodeMes.classList.add("self");
+		
 	}else{
-		return `<div class = 'message' onclick='privateMs()'>
-			<div class='name'>
-				<!-- <a style="text-decoration: none"> -->
-					${message.user}
-				<!-- </a> -->
-			</div>
-			<div class='text'>
-				${message.text}
-			</div>
-		</div>`
+		
 	}
-	
+	nodeMesName.appendChild(name);
+	nodeMesText.appendChild(mesg);
+	nodeMes.appendChild(nodeMesName);
+	nodeMes.appendChild(nodeMesText);
+	document.getElementById('messagess-area').appendChild(nodeMes);
 }
