@@ -41,7 +41,7 @@ function checkName() {
 function sendMessage() {
 	//Mandar el mensaje por el protoolo UDP
 	messageCreator();
-	document.getElementById('usrMessage').innerHTML = '';
+	document.getElementById('usrMessage').value = '';
 
 }
 
