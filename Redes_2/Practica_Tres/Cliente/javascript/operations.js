@@ -1,4 +1,4 @@
-var usrNAme = 'Elizabeth Bishop'
+var usrNAme = 'Elizabeth Bishop';
 
 function fade(element, element2Unfade) {
     var op = 1;  // initial opacity
@@ -6,7 +6,7 @@ function fade(element, element2Unfade) {
         if (op <= 0.1){
             clearInterval(timer);
 			element.style.display = 'none';
-			unfade(element2Unfade)
+			unfade(element2Unfade);
         }
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
@@ -38,12 +38,10 @@ function checkName() {
 	fade(document.getElementById('welcome'), document.getElementById('chat-area'));
 }
 
-function sendMessage() {
-	//Mandar el mensaje por el protoolo UDP
-	messageCreator();
-	document.getElementById('usrMessage').value = '';
-
-}
+// function sendMessage() {
+// 	messageCreator();
+// 	document.getElementById('usrMessage').value = '';
+// }
 
 function privateMs() {
 	console.log('ejecutar mandar mensaje privado')
@@ -65,7 +63,8 @@ function messageCreator(message) {
 		nodeMes.classList.add("self");
 		
 	}else{
-		
+		name = document.createTextNode(message.user);
+		mesg = document.createTextNode(message.mesg);
 	}
 	nodeMesName.appendChild(name);
 	nodeMesText.appendChild(mesg);
