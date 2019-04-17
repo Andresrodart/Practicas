@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Hello Bulma!</title>
+		<title>ChaChat!</title>
 		<script defer src="./javascript/all.min.js"></script> <!--load all styles -->  
 		<link rel="stylesheet" href="./css/style.css">
 	</head>
@@ -22,6 +22,11 @@
 				</div>
 				
 				<div class="container start-hidden" id='name'> 
+					<div class="columns">
+						<div class="column has-text-centered start-hidden error" id="nameInUse">
+								Nombre ya en uso :C
+						</div>
+					</div>
 					<div class="columns">
 						<div class="column has-text-centered">
 							<h2 class="title">
@@ -47,8 +52,8 @@
 		<section class="start-hidden full-h" id='chat-area'>
 			<div class="columns">
 				<div class="column is-one-fifth">
-					<div class='radiousBoxL vh80 sec-color no-Padding'>
-						<a>
+					<div class='radiousBoxL vh80 sec-color no-Padding' id='users'>
+						<a id = 'main-chat'>
 							<div class='chat-selector selected'>
 								<img src="./images/network.svg" alt="image">
 								<p>chaChat</p>
@@ -58,7 +63,7 @@
 				</div>
 				<div class="column">
 					<div class="vh80 radiousBoxR">
-						<div class='messagess-wrapper'>
+						<div class='messagess-wrapper' id = 'messagess-wrapper'>
 							<div class = 'mensagess-area' id='messagess-area'>
 								
 							</div>
@@ -72,7 +77,8 @@
 									<button class="button main-color" onclick='sendMessage()'>Send</button>
 								</div>
 								<div class="column"> 
-									<button class="button main-color" onclick=''>Add</button>
+									<button class="button main-color" id='add' onclick="document.getElementById('file-input').click();">Add</button>
+									<input id="file-input" type="file" name="name" style="display: none;" />
 								</div>
 								<div class="column"></div>
 							</div>
@@ -81,8 +87,8 @@
 				</div>
 			</div>
 		</section>
-		
 		<script defer src="./javascript/operations.js"></script> <!--load all styles -->  
 		<script defer src="./javascript/udpSocket.js"></script> <!--load all styles -->  
+		<script defer src="./javascript/sendFileManager.js"></script> <!--load all styles -->  
 	</body>
 	</html>

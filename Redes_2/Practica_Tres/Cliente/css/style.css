@@ -49,7 +49,10 @@ section.full-h {
   	max-width: none;
   	height: 100vh;
 }
-
+.error{
+	background-color: crimson;
+	color: #eee79c;
+}
 .vh80{
 	width: 100%;
   	padding: 1rem .5rem;
@@ -67,8 +70,14 @@ section.full-h {
 .radiousBoxL a { color: inherit; } 
 .radiousBoxL .chat-selector{
 	height: 12vh;
-	border: .5rem;
-	padding: .4rem .4rem
+	min-height: 40px;
+	max-height: 50px;
+	border-bottom: 1px solid ;
+	padding: .4rem .4rem;
+}
+
+.radiousBoxL .chat-selector:hover{
+	background-color: rgba(0, 0, 0, 0.4)
 }
 
 .radiousBoxL .chat-selector.selected{
@@ -77,10 +86,11 @@ section.full-h {
 
 .radiousBoxL .chat-selector img {
 	float: left;
+	min-height: 30px;
+	max-height: 40px;
 	height: 100%;
-  	max-width: 25%;
- 	width: 100%;
-  	margin-right: .5rem;
+	width: 20%;  
+	margin-right: .5rem;
   	border-radius: 50%;
 }
 
@@ -108,6 +118,10 @@ section.full-h {
 	width: 100%;
 }
 
+.mensagess-area > * {
+	display: inherit;
+}
+
 .writeArea{
 	width: 95%;
 	padding-top: 1.5rem;
@@ -128,3 +142,4 @@ section.full-h {
 .no-Padding{
 	padding: 0 !important;
 }
+
