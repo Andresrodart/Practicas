@@ -7,19 +7,19 @@ const input = document.getElementById('file-input');
 var resivingFile = false;
 var readStream;
 var file = '';
-file_socket.on("listening", function() {
-	const address = file_socket.address();
-	console.log(
-		`UDP file socket listening on ${address.address}:${address.port}`
-	);
-});
+// file_socket.on("listening", function() {
+// 	const address = file_socket.address();
+// 	console.log(
+// 		`UDP file socket listening on ${address.address}:${address.port}`
+// 	);
+// });
 file_socket.on("message", function(message, rinfo) {
 	
+	console.log(`Message from: ${rinfo.address}:${rinfo.port} - ${message.length}`);
 	if (!resivingFile) {
-		console.log(`Message from: ${rinfo.address}:${rinfo.port} - ${message.toString()}`);
 		let theTextMess = message.toString();
+		console.log(theTextMess);
 		if (theTextMess == 'start_file_sending'){
-			console.log(theTextMess);
 			sendifile = true
 			sendFile(file2sendPath);
 		}else if(theTextMess == 'continue'){
@@ -27,13 +27,12 @@ file_socket.on("message", function(message, rinfo) {
 		}else if(theTextMess == 'sending'){
 			resivingFile = true;
 			const message = Buffer.from(`ok`);
-			socket.send(message, 0, message.length, 10001, MULTICAST_ADDR, function() {
+			file_socket.send(message, 0, message.length, FILE_PORT, FILE_ADDR, function() {
 				console.info(`Sending message "${message}"`);
 			});
 		}	
 	}else{
-		console.log(`Message from: ${rinfo.address}:${rinfo.port} - ${message.length}`);
-			resvFile(message);
+		resvFile(message);
 	}
 	
 });
@@ -42,7 +41,7 @@ file_socket.on('error', (err) => {
 	server.close();
 });
 
-file_socket.bind(FILE_PORT);
+//file_socket.bind(FILE_PORT, FILE_ADDR);
 
 input.onchange = e => { 
 	var file = e.target.files[0];
@@ -63,7 +62,7 @@ input.onchange = e => {
 function sendFile(filePath) {
 	readStream = fs.createReadStream(filePath,{ highWaterMark: 65000 });
 	readStream.on('data', (chunk) => {
-		file_socket.send(chunk, 0, chunk.length, 10001, MULTICAST_ADDR, function() {
+		file_socket.send(chunk, 0, chunk.length, 10002, FILE_ADDR, function() {
 			console.info(`Sending message "${chunk.length}"`);
 		});
 		readStream.pause();
@@ -71,7 +70,7 @@ function sendFile(filePath) {
 			if (sendifile)
 				readStream.resume();
 		}, 1000);
-		sendifile = false
+		sendifile = false;
 	  });
 	readStream.on('end', () => {
 		console.log('There will be no more data.');
