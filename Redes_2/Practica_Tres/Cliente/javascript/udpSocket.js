@@ -7,9 +7,9 @@ var nameCheckedRes = false;
 var users_on_chat = {usrNAme:true};
 var chat_area_on = 'messagess-area';
 var user_area_on = 'main-chat';
-var input = document.getElementById('file-input');
 var file2sendPath = '';
-var sendifile = false
+var sendifile = false;
+var resivingFile = false;
 
 //socket.setMulticastLoopback(true);
 
@@ -23,29 +23,27 @@ socket.on("listening", function() {
 	});
 	
 socket.on("message", function(message, rinfo) {
-	console.log(`Message from: ${rinfo.address}:${rinfo.port} - ${message.toString('utf8')}`);
-		try {
-			let newMesg = JSON.parse(message.toString('utf8'));
-			if(!newMesg.user){
-				if (!nameCheckedRes && newMesg.sender === usrNAme){
-					nameChecked(newMesg.res);
-					updateUsers(newMesg.users);
-					nameCheckedRes = true;
-				}
-				else{
-					updateUsers(newMesg.users);
-				}
-			}else if(newMesg.user != usrNAme){
-				messageCreator(newMesg);
+	try {
+		console.log(`Message from: ${rinfo.address}:${rinfo.port} - ${message.toString('utf8')}`);
+		let newMesg = JSON.parse(message.toString('utf8'));
+		if(!newMesg.user){
+			if (!nameCheckedRes && newMesg.sender === usrNAme){
+				nameChecked(newMesg.res);
+				updateUsers(newMesg.users);
+				nameCheckedRes = true;
 			}
-		} catch (error) {
-			theTextMess = message.toString().split('_');
-			if (theTextMess[0] == 'start' && theTextMess[theTextMess.length - 1] == usrNAme){
-				sendFile(file2sendPath);
-			}else if(message.toString() == 'continue'){
-				sendifile = true;
+			else if(nameCheckedRes){
+				updateUsers(newMesg.users);
+			}else{
+				nameChecked(newMesg.res);
 			}
+		}else if(newMesg.user != usrNAme){
+			messageCreator(newMesg);
 		}
+		
+	} catch (error) {
+		
+	}
 });
 	
 socket.on('error', (err) => {
@@ -143,24 +141,7 @@ function changeChat(user) {
 	user_area_on = user;
 }
 
-input.onchange = e => { 
-	var file = e.target.files[0];
-	let auxMessage = {
-		'user':usrNAme,
-		'mesg': path.basename(file.path),
-		'to': chat_area_on,
-		'file':true
-	};
-	let message = Buffer.from(`${JSON.stringify(auxMessage)}`);
-	socket.send(message, 0, message.length, 10001, MULTICAST_ADDR, function() {
-		console.info(`Sending message "${message}" to 10001`);
-	});
-	socket.send(message, 0, message.length, PORT, MULTICAST_ADDR, function() {
-		console.info(`Sending message "${message}"`);
-	});
-	messageCreatorSelfFile(auxMessage);
-	file2sendPath = file.path;
-}
+
 
 function messageCreatorSelfFile(message) {
 	
@@ -173,6 +154,7 @@ function messageCreatorSelfFile(message) {
 	let file = document.createElement('a');
 	let name;
 	let fromoWhom =  'messagess-area';
+	let path_ = '';
 	
 	nodeMes.classList.add("message");                					// Create a <div> node
 	nodeMesName.classList.add("name");
@@ -186,6 +168,15 @@ function messageCreatorSelfFile(message) {
 	file_imege_wraper.appendChild(node_image);
 	file_imege_wraper.appendChild(node_p);
 	file.appendChild(file_imege_wraper);
+	file.addEventListener('click', function(e) {
+		if (e.path[2].text != null)
+			path_ = e.path[2].text;
+		else if(e.path[1].text != null)
+			path_ = e.path[1].text;
+		else
+			path_ = e.path[3].text;
+		downloadFile(path_);
+	});
 	nodeMesText.appendChild(file);
 
 	
@@ -195,3 +186,4 @@ function messageCreatorSelfFile(message) {
 	nodeMes.appendChild(nodeMesText);
 	document.getElementById(fromoWhom).appendChild(nodeMes); 
 }
+

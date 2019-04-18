@@ -67,14 +67,20 @@ function messageCreator(message) {
 		if(message.file == null)
 			nodeMesText.appendChild(mesg);
 		else{
-			node_image.classList.add('fas', 'fa-file')
+			let path_ = ''
+			node_image.classList.add('fas', 'fa-file');
 			node_p.innerHTML = message.mesg;
 			file_imege_wraper.appendChild(node_image);
 			file_imege_wraper.appendChild(node_p);
 			file.appendChild(file_imege_wraper);
 			file.addEventListener('click', function(e) {
-				userToSee = (e.path[2].text == null)? e.path[1].text:e.path[2].text
-				changeChat(userToSee);
+				if (e.path[2].text != null)
+					path_ = e.path[2].text;
+				else if(e.path[1].text != null)
+					path_ = e.path[1].text;
+				else
+					path_ = e.path[3].text;
+				downloadFile(path_);
 			});
 			nodeMesText.appendChild(file);
 		}
@@ -86,3 +92,4 @@ function messageCreator(message) {
 	nodeMes.appendChild(nodeMesText);
 	document.getElementById(fromoWhom).appendChild(nodeMes); 
 }
+

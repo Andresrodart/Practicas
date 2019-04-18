@@ -1,0 +1,56 @@
+import socket
+import struct
+import sys
+import json
+import os
+
+HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+PORT = 10002        # Port to listen on (non-privileged ports are > 1023)
+ServerDirectory = './ServerDummy/'
+recivingFile = False
+f = None
+
+if not os.path.exists(ServerDirectory):
+    os.mkdir(ServerDirectory)
+
+with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+	s.bind((HOST,PORT))
+
+	while True:
+		if not recivingFile:
+			print('\nwaiting to receive message')
+			data, address = s.recvfrom(65000)
+			try:
+				data_in_json = json.loads(data)
+				if data_in_json['file'] == True :
+					thePath = os.path.abspath(ServerDirectory +  data_in_json['mesg'])
+					f = open(ServerDirectory + data_in_json['mesg'], 'wb')
+					print(ServerDirectory + data_in_json['mesg'])
+					recivingFile = True
+					s.sendto(('start_file_sending').encode(), address)
+				else:
+					thePath = os.path.abspath(ServerDirectory + '/' +os.path.basename(data_in_json['file']))
+					f = open(thePath, 'rb')
+					print('sending: ', thePath)
+					s.sendto(('sending').encode(), address)
+					data = s.recv(65000)
+					print(data.decode())
+					chonk = f.read(65000)
+					while chonk: 
+						s.sendto(chonk, address)
+						chonk = f.read(65000)
+			except Exception as identifier:
+				pass
+		else:
+			while True:
+				data = s.recv(65000)
+				f.write(data)
+				if len(data) < 65000:
+					flnm = 0
+					break
+				s.sendto('continue'.encode(), address)
+		f.close()
+		recivingFile = False
+		print("Done Receiving")
+	s.close()
