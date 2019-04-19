@@ -30,12 +30,10 @@ socket.on("message", function(message, rinfo) {
 			if (!nameCheckedRes && newMesg.sender === usrNAme){
 				nameChecked(newMesg.res);
 				updateUsers(newMesg.users);
-				nameCheckedRes = true;
+				nameCheckedRes = newMesg.res;
 			}
 			else if(nameCheckedRes){
 				updateUsers(newMesg.users);
-			}else{
-				nameChecked(newMesg.res);
 			}
 		}else if(newMesg.user != usrNAme){
 			messageCreator(newMesg);
@@ -70,13 +68,19 @@ function sendMessage() {
 
 function checkName() {
 	usrNAme = document.getElementById('usrName').value;
-	let auxMessage = {
-		'user':usrNAme
-	};
-	const message = Buffer.from(`${JSON.stringify(auxMessage)}`);
-	socket.send(message, 0, message.length, 10001, MULTICAST_ADDR, function() {
-		console.info(`Sending message "${message}"`);
-	});
+	document.getElementById('nameBlank').style.display = 'none';
+	if (usrNAme === '') {
+		document.getElementById('nameBlank').style.display = 'block';
+	}else{
+		let auxMessage = {
+			'user':usrNAme
+		};
+		const message = Buffer.from(`${JSON.stringify(auxMessage)}`);
+		socket.send(message, 0, message.length, 10001, MULTICAST_ADDR, function() {
+			console.info(`Sending message "${message}"`);
+		});
+	}
+	
 	
 }
 function nameChecked(result) {
@@ -186,4 +190,3 @@ function messageCreatorSelfFile(message) {
 	nodeMes.appendChild(nodeMesText);
 	document.getElementById(fromoWhom).appendChild(nodeMes); 
 }
-

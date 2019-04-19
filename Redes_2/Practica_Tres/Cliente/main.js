@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, dialog} = require('electron')
-
+const {app, BrowserWindow, dialog, ipcMain} = require('electron')
+const path = require('path');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -8,13 +8,14 @@ let mainWindow
 function createWindow () {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-	width: 1200,
-	height: 600,
+	minWidth : 1200,
+	minHeight : 600,
+	icon: path.normalize('.\\images\\flamenco_Freepik.ico'),
 	webPreferences: {
 			nodeIntegration: true
 		}
   	})
-
+	mainWindow.setMenu(null)
 	// and load the index.html of the app.
 	mainWindow.loadFile('index.html')
 
@@ -27,7 +28,14 @@ function createWindow () {
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
 		mainWindow = null
-  	})
+	})
+	
+	mainWindow.on('close', (e) => {
+		if (mainWindow) {
+		  e.preventDefault();
+		  mainWindow.webContents.send('app-close');
+		}
+	})
 }
 
 // This method will be called when Electron has finished
@@ -50,3 +58,9 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('closed', _ => {
+	mainWindow = null;
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
+});

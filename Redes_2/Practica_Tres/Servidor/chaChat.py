@@ -34,8 +34,12 @@ while True:
 	print('received {} bytes from {}'.format(len(data), address))
 	try:
 		data_in_json = json.loads(data)
-		if data_in_json['user'] in users and 'file':
-			sock.sendto(json.dumps({'res':False}).encode(), send_multicast_group)
+		print(str(data_in_json))
+		if 'exit' in data_in_json:
+			print(data_in_json['user'], ' disconected')
+			users.pop(data_in_json['user'], None)
+		elif data_in_json['user'] in users:
+			sock.sendto(json.dumps({'res':False, 'sender':data_in_json['user']}).encode(), send_multicast_group)
 		else:
 			users[data_in_json['user']] = True
 			data2send = json.dumps({'res':True, 'sender':data_in_json['user'] ,'users':users}, ensure_ascii=False)

@@ -69,6 +69,7 @@ function messageCreator(message) {
 		else{
 			let path_ = ''
 			node_image.classList.add('fas', 'fa-file');
+			node_image.style.display = 'inline';
 			node_p.innerHTML = message.mesg;
 			file_imege_wraper.appendChild(node_image);
 			file_imege_wraper.appendChild(node_p);

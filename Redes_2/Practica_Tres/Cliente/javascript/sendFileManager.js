@@ -1,12 +1,13 @@
+const { remote, ipcRenderer} = require('electron');
 const fs = require("fs");
-const { remote } = require('electron');
 const FILE_PORT = 10002;
 const FILE_ADDR = "127.0.0.1";
 const file_socket = dgram.createSocket({ type: "udp4", reuseAddr: true });
 const input = document.getElementById('file-input');
 var resivingFile = false;
 var readStream;
-var file = '';
+var fileToDownload = '';
+var writeStream;
 // file_socket.on("listening", function() {
 // 	const address = file_socket.address();
 // 	console.log(
@@ -26,6 +27,7 @@ file_socket.on("message", function(message, rinfo) {
 			sendifile = true;
 		}else if(theTextMess == 'sending'){
 			resivingFile = true;
+			document.getElementById('sending_file').style.display = 'block';
 			const message = Buffer.from(`ok`);
 			file_socket.send(message, 0, message.length, FILE_PORT, FILE_ADDR, function() {
 				console.info(`Sending message "${message}"`);
@@ -33,6 +35,12 @@ file_socket.on("message", function(message, rinfo) {
 		}	
 	}else{
 		resvFile(message);
+		if (message.length < 65000){
+			writeStream.end();  
+			resivingFile = false;
+			console.log('Done resiving file');
+			document.getElementById('sending_file').style.display = 'none';
+		}
 	}
 	
 });
@@ -90,25 +98,44 @@ function sendFile(filePath) {
 }
 
 function resvFile(data) {
-	fs.appendFile(file, data, (err) => {
+	writeStream.write(data, (err)=>{
 		if (err) throw err;
-		console.log('The "data to append" was appended to file!');
-	  });
+		let message = Buffer.from('continue');
+		file_socket.send(message, 0, message.length, 10002, FILE_ADDR, function() {
+			console.info(`Sending message "${message}" to 10002 to recive file`);
+		});
+	});
 }
 
 function downloadFile(fileName){
-	file = path.join(remote.dialog.showOpenDialog({properties: ['openDirectory']})[0], path.basename(fileName));
-	console.log(file);
-	fs.open(file, 'w', function (err, file) {
-		if (err) throw err;
-		console.log('Saved!');
-	});
+	fileToDownload = path.join(remote.dialog.showOpenDialog({properties: ['openDirectory']})[0], path.basename(fileName));
+	if (fileToDownload != null) {
+		fs.open(fileToDownload, 'w', function (err, file) {
+			if (err) throw err;
+			fs.close(file, (err)=>{
+				if (err) throw err;
+				writeStream = fs.createWriteStream(fileToDownload);
+				let auxMessage = {
+					'user':usrNAme,
+					'file': fileToDownload
+				};
+				let message = Buffer.from(`${JSON.stringify(auxMessage)}`);
+				file_socket.send(message, 0, message.length, 10002, FILE_ADDR, function() {
+					console.info(`Sending message "${message}" to 10002 to recive file`);
+				});
+			});
+		});
+	}
+}
+
+ipcRenderer.on('app-close', _ => {
 	let auxMessage = {
 		'user':usrNAme,
-		'file': file
+		'exit':true
 	};
-	let message = Buffer.from(`${JSON.stringify(auxMessage)}`);
-	socket.send(message, 0, message.length, 10002, FILE_ADDR, function() {
-		console.info(`Sending message "${message}" to 10002`);
+	const message = Buffer.from(`${JSON.stringify(auxMessage)}`);
+	socket.send(message, 0, message.length, 10001, MULTICAST_ADDR, function() {
+		console.info(`Sending message "${message}"`);
+		ipcRenderer.send('closed');
 	});
-}
+});
