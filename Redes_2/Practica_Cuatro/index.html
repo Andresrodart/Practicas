@@ -5,6 +5,7 @@
 		<link rel="shortcut icon" type="image/png" href="favicon.ico">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<script src="utilities.js"></script>
 	</head>
 	<body>
 		<nav class="teal lighten-1">
@@ -17,47 +18,46 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="row container">
+		<div class="row container" id="Bienvenido">
 			<h1 class="center-align">Bienvenido</h1>
 			<div class="row">
 					<div class="col s3 offset-s4">
 						<img class="center-align" src="coddess.png" alt="coddess" height="390px">
 					</div>
 			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					<input id="first_name" type="text" class="validate" name="name">
+					<label for="first_name">Nombre</label>
+				</div>
+				<div class="input-field col s6">
+					<input id="tel" type="text" class="validate" name="tel">
+					<label for="tel">Teléfono</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input id="Dir" type="text" class="validate" name="dir">
+					<label for="Dir">Dirección</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<textarea id="textarea1" class="materialize-textarea" name="textarea"></textarea>
+					<label for="textarea1">Comentarios</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					<button class="btn waves-effect waves-light" onclick="send()">Enviar datos</button>
+				</div>
+				<div class="input-field col s6">
+					<button class="btn waves-effect waves-light" onclick="clean()">Borrar datos</button>
+				</div>
+			</div>
 		</div>
-		<div class="row container">
-			<form class="col s12" METHOD="POST" ACTION="http://localhost:4545">
-				<div class="row">
-					<div class="input-field col s6">
-						<input id="first_name" type="text" class="validate" name="name">
-						<label for="first_name">Nombre</label>
-					</div>
-					<div class="input-field col s6">
-						<input id="tel" type="text" class="validate" name="tel">
-						<label for="tel">Teléfono</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s12">
-						<input id="Dir" type="text" class="validate" name="dir">
-						<label for="Dir">Dirección</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s12">
-						<textarea id="textarea1" class="materialize-textarea" name="textarea"></textarea>
-						<label for="textarea1">Comentarios</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s6">
-						<button class="btn waves-effect waves-light" type="submit" name="action">Enviar datos</button>
-					</div>
-					<div class="input-field col s6">
-						<button class="btn waves-effect waves-light" type="reset" name="action">Borrar datos</button>
-					</div>
-				</div>
-			</form>
+		<div class="row container" id="POST" style="display: none">
+			
 		</div>
 		<footer class="page-footer teal lighten-1">
 			<div class="container">

@@ -1,6 +1,9 @@
 from http.server import BaseHTTPRequestHandler 
 import socketserver
 import os
+import cgi
+import urllib.parse
+import json
 from io import BytesIO
 
 class Handler(BaseHTTPRequestHandler):
@@ -9,16 +12,12 @@ class Handler(BaseHTTPRequestHandler):
 		self.respond()
 
 	def do_POST(self):
-		content_length = int(self.headers['Content-Length'])
-		body = self.rfile.read(content_length)
+		content = self.rfile.read(int(self.headers['Content-Length'])).decode("UTF-8")
+		print(content)
 		self.send_response(200)
+		self.send_header("Content-Length", len(content.encode()))
 		self.end_headers()
-		response = BytesIO()
-		response.write(b'This is POST request. ')
-		response.write(b'Received: ')
-		response.write(body)
-		print(body)
-		self.wfile.write(response.getvalue())
+		self.wfile.write(content.encode())
 
 	def handle_http(self):
 		status = 200
