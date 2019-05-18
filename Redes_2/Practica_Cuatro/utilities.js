@@ -60,3 +60,34 @@ function send() {
 				posArea.appendChild(mesg);
 			});
 }
+
+function deleteF() {
+	fetch(url, {
+		method: 'DELETE',
+		body: JSON.stringify({file: document.getElementById('file').value}), // data can be `string` or {object}!
+		headers:{
+		  'Content-Type': 'application/json'
+		}
+	  }).then(res =>{
+		  return res.text();
+	  })
+	  .catch(error => console.error('Error:', error))
+	  .then(response => {console.log('Success:', response);});
+}
+
+function getFiles(params) {
+	fetch(url, {
+		method: 'POST', // or 'PUT'
+		body: 'file:all', // data can be `string` or {object}!
+		headers:{
+		  'Content-Type': 'application/json'
+		}
+	  }).then(res =>{
+		  return res.text();
+	  })
+	  .catch(error => console.error('Error:', error))
+	  .then(response => {
+				console.log('Success:', response);
+				document.getElementById('Files').innerHTML = `${response}`;
+			});
+}
