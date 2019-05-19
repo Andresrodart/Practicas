@@ -1,10 +1,15 @@
 from http.server import BaseHTTPRequestHandler 
-import socketserver
+from socketserver import ThreadingMixIn, TCPServer
+import sys
+import threading
+import queue
+import socket
 import os
 import cgi
 import urllib.parse
 import json
 from io import BytesIO
+from concurrent.futures import ThreadPoolExecutor # pip install futures
 
 class Handler(BaseHTTPRequestHandler):
 	# Handler for the GET requests
@@ -153,9 +158,74 @@ class Handler(BaseHTTPRequestHandler):
 			chonk = f.read(1024)
 		f.close()
 			
-		
-PORT = 4545
 
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
+class ThreadPoolMixIn(ThreadingMixIn):
+	'''
+	use a thread pool instead of a new thread on every request
+	'''
+	numThreads = 10
+	allow_reuse_address = True  # seems to fix socket.error on server restart
+	def __init__(self, numThreads=10):
+		self.numThreads=numThreads
+		ThreadingMixIn.__init__(self)
+	
+	def serve_forever(self):
+		'''
+		Handle one request at a time until doomsday.
+		'''
+		# set up the threadpool
+		self.requests = queue.Queue(self.numThreads)
+		for x in range(self.numThreads):
+			t = threading.Thread(target = self.process_request_thread)
+			t.setDaemon(1)
+			t.start()
+
+		# server main loop
+		while True:
+			self.handle_request()
+			
+		print('Closing server')
+		self.server_close()
+
+	
+	def process_request_thread(self):
+		'''
+		obtain request from queue instead of directly from server socket
+		'''
+		while True:
+			ThreadingMixIn.process_request_thread(self, *self.requests.get())
+
+	
+	def handle_request(self):
+		'''
+		simply collect requests and put them on the queue for the workers.
+		'''
+		try:
+			request, client_address = self.get_request()
+			print('Connecting client: ', client_address)
+		except socket.error:
+			print('error')
+			return
+		if self.verify_request(request, client_address):
+			self.requests.put((request, client_address))
+
+class ThreadedServer(ThreadPoolMixIn, TCPServer):
+	def __init__(self, server_address, request_class, numThreads=10, bind_and_activate=True):
+		ThreadPoolMixIn.__init__(self, numThreads=numThreads)
+		TCPServer.__init__(
+			self,
+			server_address,
+			request_class,
+			bind_and_activate)
+
+PORT = 4545
+userChoise = int(input('Ingrese el núemro de hilos a usar: '))
+with ThreadedServer(("", PORT), Handler, numThreads=userChoise) as httpd:
 	print("serving at port", PORT)
-	httpd.serve_forever()
+	try:
+		httpd.serve_forever()
+	except KeyboardInterrupt:
+		print("\nShutting down server per users request.")
+		httpd.join()
+		httpd.shutdown()
+		httpd.server_close()
