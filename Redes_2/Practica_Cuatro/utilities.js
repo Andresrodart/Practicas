@@ -37,12 +37,13 @@ function send() {
 				mesg = document.createElement('div');
 				mesg.classList.add('container', 'row');
 				mesg.innerHTML = `
+					<h1 class="center-align">Petición Post</h1>
 					<div class="row">
-						<div class="col s3">
+						<div class="col s12">
 							<div class="card">
 								<div class="card-image">
-									<img src="coddess.png">
-									<span class="card-title">${response.username}</span>
+									<img src="coddessB.png" width="400px"  height="auto">
+									<span class="card-title"> <p style="background-color: crimson; padding: 0  2px 0 2px">${response.username} </p></span>
 								</div>
 								<div class="card-content">
 									<p>
