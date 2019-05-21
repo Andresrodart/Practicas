@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import socket
-
+import json
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 4545        # Port to listen on (non-privileged ports are > 1023)
 DIC_WORDS_LIST = ['Serendipia', 'Anonadado', 'Escampar','Resarcir','Compeler','Andorga']
@@ -52,23 +52,31 @@ while True:
 				if not data:
 					break
 				elif data.lower() == 'get':
+					print('Sending dic')
 					data = DIC_WORDS
 				elif data.split('.')[0] == 'N3W_W0RD':
-					DIC[data.split('.')[1]] = data.split('.')[2]
-					DIC_WORDS_LIST.append(data.split('.')[1].capitalize())
-					senfWord(data.split('.')[1])
-					data = 'Palabra agregada con éxito'.encode()
-				elif data.split('.')[0] == '_PUT':
-					OtheDIc[(data.split('.')[1])] = int(data.split('.')[2])
+					print('Adding new word')
+					DIC[((data.split('.')[1])).lower()] = data.split('.')[2]
 					DIC_WORDS_LIST.append(data.split('.')[1].capitalize())
 					DIC_WORDS = ('\n'.join(DIC_WORDS_LIST)).encode()
-					data = b'added'
+					senfWord(data.split('.')[1])
+					data = ('Palabra agregada con éxito').encode()
+				elif data.split('.')[0] == '_PUT':
+					print('Sending new word to other severs')
+					OtheDIc[((data.split('.')[1])).lower()] = int(data.split('.')[2])
+					DIC_WORDS_LIST.append(data.split('.')[1].capitalize())
+					DIC_WORDS = ('\n'.join(DIC_WORDS_LIST)).encode()
+					data = ('added: ' + DIC_WORDS.decode() + json.dumps(OtheDIc)).encode()
 				elif data.lower() not in DIC:
+					print('Searching in other server')
 					if data.lower() in OtheDIc:
 						Finder = FindWord(data.lower(), OtheDIc[data.lower()])
 						data = Finder.getDef().encode()
 					else:
 						data = b'Not Found'
 				else:
+					print('Found in this server')
 					data = DIC[data.lower()].encode()
+				print('Sending:', data)
 				conn.sendall(data)
+				s.close()

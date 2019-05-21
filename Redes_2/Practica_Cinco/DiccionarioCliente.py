@@ -11,6 +11,7 @@ try:
 			s.connect((HOST, PORT))
 			s.sendall(b'get')
 			DIC = s.recv(1024).decode()
+			s.close()
 		print('Diccionario disponible:\n', DIC, sep='')
 		choose = int(input('\nIngresa:\n\t1) Buscar palabra\n\t2) Agregar palabra al diccionario\n\tOtro) Salir: '))
 		if choose == 1:
@@ -20,10 +21,11 @@ try:
 				s.connect((HOST, PORT))
 				s.sendall(word.encode())
 				data = s.recv(1024)
-				if data and data.decode() != 'Not Found':
+				if data or data.decode() != 'Not Found':
 					print(word, ': ', data.decode(), '\n')
 				else:
 					print('palabra no encontrada, ¿la escribiste bien?')
+				s.close()
 		elif choose == 2:
 			word = input('Ingresa la palabra nueva a agregar: ')
 			correct = input('¿%s esta correcta? 0) Sí Otro) No: '%word)
@@ -42,6 +44,7 @@ try:
 				s.sendall(('N3W_W0RD.%s.%s'%(word, definition)).encode())
 				data = s.recv(1024)
 				print(data.decode(), '\n')
+				s.close()
 		else:
 			break
 except KeyboardInterrupt:
