@@ -11,6 +11,10 @@ public class Matrix {
 		this.A[i][j] = value;
 	}
 
+	public double getValue(int i, int j){
+		return this.A[i][j];
+	}
+
 	public void printMatrix(){
 		System.out.print("Matrix is \n"); 
         for (int i = 0; i < TamMatrices; i++)
@@ -21,18 +25,18 @@ public class Matrix {
 	public void transpose(){ 
         for (int i = 0; i < this.TamMatrices; i++) 
             for (int j = i + 1; j < this.TamMatrices; j++){ 
-                 int temp = A[i][j]; 
-                 A[i][j] = A[j][i]; 
-                 A[j][i] = temp; 
+                double temp = A[i][j]; 
+                A[i][j] = A[j][i]; 
+                A[j][i] = temp; 
             } 
     }
 
-	static void transpose(Matrix A[][]){ 
-        for (int i = 0; i < A.TamMatrices; i++) 
-            for (int j = i + 1; j < A.TamMatrices; j++){ 
-                 int temp = A[i][j]; 
-                 A[i][j] = A[j][i]; 
-                 A[j][i] = temp; 
+	static void transpose(double A[][], int tam){ 
+        for (int i = 0; i < tam; i++) 
+            for (int j = i + 1; j < tam; j++){ 
+				double temp = A[i][j]; 
+                A[i][j] = A[j][i]; 
+                A[j][i] = temp; 
             } 
     }
 }
