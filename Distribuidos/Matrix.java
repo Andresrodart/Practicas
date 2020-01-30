@@ -1,10 +1,16 @@
 public class Matrix {
 	private int TamMatrix = 0;
 	private double A[][];
-
+	private String name = this.toString();
 	public Matrix(final int TamMatrix) {
 		this.TamMatrix = TamMatrix;
 		this.A = new double[TamMatrix][TamMatrix]; 
+	}
+
+	public Matrix(final int TamMatrix, String name) {
+		this.name = name; 
+		this.TamMatrix = TamMatrix;
+		this.A = new double[TamMatrix][TamMatrix];
 	}
 
 	public void setValue(int i, int j, double value){
@@ -16,10 +22,17 @@ public class Matrix {
 	}
 
 	public void printMatrix(){
-		System.out.print("Matrix is \n"); 
-        for (int i = 0; i < TamMatrix; i++)
-            for (int j = 0; j < TamMatrix; j++) 
-            	System.out.print(this.A[i][j] + " \n");  
+		System.out.println("\nMatrix " + this.name + " is"); 
+        for (int i = 0; i < TamMatrix; i++){
+            for (int j = 0; j < TamMatrix; j++){
+				System.out.print(this.A[i][j] + " \t ");
+			} 
+			System.out.print("\n");
+		}
+		for (int i = 0; i < A.length; i++) {
+			System.out.print("-- --\t");
+		}
+		System.out.print("\n");
 	}
 
 	public void transpose(){ 
