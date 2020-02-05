@@ -1,5 +1,3 @@
-package DistributedMatrixMul;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.DataInputStream;
@@ -12,7 +10,7 @@ public class NodeZero {
 	private int TamMatrix = 4, nodes = 4;
 	private static Object lock = new Object();
 
-	public NodeZero(int TamMatrix, int nodes) {
+	public NodeZero(final int TamMatrix, final int nodes) {
 		this.TamMatrix = TamMatrix;
 		this.nodes = nodes;
 		A = new Matrix(this.TamMatrix);
@@ -35,22 +33,22 @@ public class NodeZero {
 			System.out.println("Server is listening on port " + 5050);
 			for (int i = 0; i < this.nodes; i++) {
 
-				Socket nodeClient = serverSocket.accept();
+				final Socket nodeClient = serverSocket.accept();
 				System.out.println("A new client is connected : " + nodeClient);
 
 				// obtaining input and out streams
-				DataInputStream dis = new DataInputStream(nodeClient.getInputStream());
-				DataOutputStream dos = new DataOutputStream(nodeClient.getOutputStream());
+				final DataInputStream dis = new DataInputStream(nodeClient.getInputStream());
+				final DataOutputStream dos = new DataOutputStream(nodeClient.getOutputStream());
 
 				System.out.println("Assigning new thread for this client");
 
 				// create a new thread object
-				Thread t = new ConexionHandler(nodeClient, dis, dos, i);
+				final Thread t = new ConexionHandler(nodeClient, dis, dos, i);
 
 				// Invoking the start() method
 				t.start();
 			}
-			Matrix aux = new Matrix(this.TamMatrix / 2);
+			final Matrix aux = new Matrix(this.TamMatrix / 2);
 			for (int i = 0; i < this.TamMatrix / 2 - 1; i++) {
 				for (int j = 0; j < this.TamMatrix / 2 - 1; j++) {
 					for (int j2 = 0; j2 < this.TamMatrix / 2 - 1; j2++) {
@@ -73,55 +71,56 @@ public class NodeZero {
 					}
 					try {
 						Thread.sleep(100);
-					} catch (InterruptedException e) {
+					} catch (final InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}
 			C.printMatrix();
-		} catch (IOException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
+		} catch (final IOException ex) {
+			System.out.println("Server exception: " + ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 
-	public class ConexionHandler extends Thread{
+	public class ConexionHandler extends Thread {
 		private int n = 0;
-		private Socket conexion;
-		private final DataInputStream dis; 
-		private final DataOutputStream dos; 
-		
-		public ConexionHandler(Socket conexion, DataInputStream dis, DataOutputStream dos, int n) {
+		private final Socket conexion;
+		private final DataInputStream dis;
+		private final DataOutputStream dos;
+
+		public ConexionHandler(final Socket conexion, final DataInputStream dis, final DataOutputStream dos,
+				final int n) {
 			super();
 			this.n = n;
-			this.dis = dis; 
-			this.dos = dos; 
+			this.dis = dis;
+			this.dos = dos;
 			this.conexion = conexion;
 			System.out.println("Starting node: " + this.n);
-		}  
-	
-		public void run(){
-			//String received; 
-        	//String toreturn; 
-			try { 
-  
-                // Ask user what he wants 
-                dos.writeUTF(this.n + " ");
-                // receive the answer from client 
-                // received = dis.readUTF(); 
-                conexion.close();
+		}
 
-            } catch (IOException e) { 
-                e.printStackTrace(); 
+		public void run() {
+			// String received;
+			// String toreturn;
+			try {
+
+				// Ask user what he wants
+				dos.writeUTF(this.n + " ");
+				// receive the answer from client
+				// received = dis.readUTF();
+				conexion.close();
+
+			} catch (final IOException e) {
+				e.printStackTrace();
 			}
 
-			try{ 
-				// closing resources 
-				this.dis.close(); 
-				this.dos.close(); 
-				
-			}catch(IOException e){ 
+			try {
+				// closing resources
+				this.dis.close();
+				this.dos.close();
+
+			} catch (final IOException e) {
 				e.printStackTrace(); 
 			} 
         } 

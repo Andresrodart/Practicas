@@ -1,5 +1,3 @@
-package DistributedMatrixMul;
-
 public class DistributedMatrixMul {
 
     public static void main (String[] args) {

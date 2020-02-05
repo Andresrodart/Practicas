@@ -1,5 +1,3 @@
-package DistributedMatrixMul;
-
 public class Matrix {
 	private int TamMatrix = 0;
 	private double A[][];
