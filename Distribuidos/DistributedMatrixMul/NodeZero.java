@@ -121,6 +121,7 @@ public class NodeZero {
 					aux[i] = B.getValue(rowB + i);
 				}
 				new Matrix(aux, "aux").printMatrix();
+				os.flush();
 				os.writeObject(aux);
 				
 				synchronized (lock) {
