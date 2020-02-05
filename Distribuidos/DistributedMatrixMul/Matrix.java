@@ -1,20 +1,36 @@
+package DistributedMatrixMul;
+
 public class Matrix {
 	private int TamMatrix = 0;
 	private double A[][];
 	private String name = this.toString();
+	final public int length;
+
 	public Matrix(final int TamMatrix) {
 		this.TamMatrix = TamMatrix;
+		this.length = this.TamMatrix;
 		this.A = new double[TamMatrix][TamMatrix]; 
+	}
+	
+	public Matrix(final int row, final int col) {
+		this.TamMatrix = row * col;
+		this.length = this.TamMatrix;
+		this.A = new double[row][col]; 
 	}
 
 	public Matrix(final int TamMatrix, String name) {
 		this.name = name; 
 		this.TamMatrix = TamMatrix;
+		this.length = this.TamMatrix;
 		this.A = new double[TamMatrix][TamMatrix];
 	}
 
 	public void setValue(int i, int j, double value){
 		this.A[i][j] = value;
+	}
+	
+	public void sumValue(int i, int j, double value){
+		this.A[i][j] += value;
 	}
 
 	public double getValue(int i, int j){

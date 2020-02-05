@@ -1,3 +1,5 @@
+package DistributedMatrixMul;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetAddress;
@@ -5,8 +7,13 @@ import java.net.Socket;
 // import java.util.Scanner;
 
 public class Node {
-	public Node() {
-		 
+	
+	private Double A[][], B[][], C[][];
+	
+	public Node(int TamMatrix) {
+		this.A = new Double[TamMatrix/2][TamMatrix];
+		this.B = new Double[TamMatrix/2][TamMatrix];
+		this.C = new Double[TamMatrix/2][TamMatrix/2];
 	}
 
 	public void solve() {

@@ -1,3 +1,5 @@
+package DistributedMatrixMul;
+
 public class DistributedMatrixMul {
 
     public static void main (String[] args) {
@@ -18,18 +20,21 @@ public class DistributedMatrixMul {
 		*/
 		if (args.length > 0) {
 			try {
-				nodes = Integer.parseInt(args[1]);
+				//nodes = Integer.parseInt(args[1]); Need to think how to segment the matrix for different nodes
 				TamMatrix = Integer.parseInt(args[0]);
 				System.out.println("Size of Matrix: " + TamMatrix + " with : " + nodes + " nodes");
+				if (TamMatrix % 2 != 0) {
+					throw new NumberFormatException("NO pair");
+				}
 			} catch (NumberFormatException e) {
-				System.err.println("One or mores arguments are not an integer or missing.");
+				System.err.println("argument is not an integer or missing. Or Number is not pair");
 				System.exit(1);
 			}
 
 			NodeZero n0 = new NodeZero(TamMatrix, nodes);
 			n0.solve();
 		}else{
-			Node node = new Node();
+			Node node = new Node(TamMatrix);
 			node.solve();
 		}
     }
