@@ -3,6 +3,7 @@ import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class NodeZero {
 	private static int n = 0;
@@ -43,7 +44,7 @@ public class NodeZero {
 				System.out.println("Assigning new thread for this client");
 
 				// create a new thread object
-				final Thread t = new ConexionHandler(nodeClient, dis, dos, i);
+				final Thread t = new ConexionHandler(nodeClient, dis, dos, i + 1);
 
 				// Invoking the start() method
 				t.start();
@@ -84,14 +85,14 @@ public class NodeZero {
 		}
 	}
 
-	public class ConexionHandler extends Thread {
+	public class ConexionHandler extends Thread{
 		private int n = 0;
+		private ObjectOutputStream os;
 		private final Socket conexion;
 		private final DataInputStream dis;
 		private final DataOutputStream dos;
 
-		public ConexionHandler(final Socket conexion, final DataInputStream dis, final DataOutputStream dos,
-				final int n) {
+		public ConexionHandler(final Socket conexion, final DataInputStream dis, final DataOutputStream dos, final int n) {
 			super();
 			this.n = n;
 			this.dis = dis;
@@ -104,11 +105,33 @@ public class NodeZero {
 			// String received;
 			// String toreturn;
 			try {
-
+				this.os = new ObjectOutputStream(conexion.getOutputStream());
+				
+				int rowB = (this.n == 2)? 0 : NodeZero.A.length / 2;
+				int rowA = (this.n == 1)? 0 : NodeZero.A.length / 2;
+				double[][] aux = new double[NodeZero.A.length / 2][NodeZero.B.length];
 				// Ask user what he wants
 				dos.writeUTF(this.n + " ");
+				for (int i = 0; i < aux.length; i++) {
+					aux[i] = A.getValue(rowA + i);
+				}
+				os.writeObject(aux);
 				// receive the answer from client
-				// received = dis.readUTF();
+				for (int i = 0; i < aux.length; i++) {
+					aux[i] = B.getValue(rowB + i);
+				}
+				new Matrix(aux, "aux").printMatrix();
+				os.writeObject(aux);
+				
+				synchronized (lock) {
+					// for (int i = 0; i < aux.length; i++) {
+					// 	for (int j = 0; j < aux.length; j++) {
+					// 		C.setValue(i, j, aux.getValue(i, j));
+					// 	}
+					// }
+					NodeZero.n++;
+				}
+				os.close();
 				conexion.close();
 
 			} catch (final IOException e) {

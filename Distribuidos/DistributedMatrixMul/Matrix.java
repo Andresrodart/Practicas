@@ -10,6 +10,19 @@ public class Matrix {
 		this.A = new double[TamMatrix][TamMatrix]; 
 	}
 	
+	public Matrix(final double[][] arr){
+		this.TamMatrix = arr.length;
+		this.length = this.TamMatrix;
+		this.A = arr.clone();
+	}
+	
+	public Matrix(final double[][] arr, String name){
+		this.name = name; 
+		this.A = arr.clone();
+		this.TamMatrix = arr.length;
+		this.length = this.TamMatrix;
+	}
+
 	public Matrix(final int row, final int col) {
 		this.TamMatrix = row * col;
 		this.length = this.TamMatrix;
@@ -30,15 +43,20 @@ public class Matrix {
 	public void sumValue(int i, int j, double value){
 		this.A[i][j] += value;
 	}
+	
+	public double[] getValue(int i){
+		return this.A[i];
+	}
 
 	public double getValue(int i, int j){
 		return this.A[i][j];
 	}
+	
 
 	public void printMatrix(){
 		System.out.println("\nMatrix " + this.name + " is"); 
         for (int i = 0; i < TamMatrix; i++){
-            for (int j = 0; j < TamMatrix; j++){
+            for (int j = 0; j < this.A[i].length; j++){
 				System.out.print(this.A[i][j] + " \t ");
 			} 
 			System.out.print("\n");

@@ -1,5 +1,6 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 // import java.util.Scanner;
@@ -27,11 +28,16 @@ public class Node {
 			// obtaining input and out streams
 			final DataInputStream dis = new DataInputStream(s.getInputStream());
 			final DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+			final ObjectInputStream is = new ObjectInputStream(s.getInputStream());
 
 			// the following loop performs the exchange of
 			// information between client and client handler
 
 			System.out.println(dis.readUTF());
+			Matrix A = new Matrix((double[][]) is.readObject(), "A");
+			Matrix B = new Matrix((double[][]) is.readObject(), "B");
+			A.printMatrix();
+			B.printMatrix();
 			// String tosend = scn.nextLine();
 			// dos.writeUTF(tosend);
 			s.close();
