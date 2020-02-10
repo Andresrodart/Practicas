@@ -1,3 +1,13 @@
+/* 
+*
+* Matrix Class
+* By: Andrès Rodarte López
+* Distributed matrix multiplication
+*
+* Here is only auxiliar code for maneging 2-D matrix
+*	
+*
+*/
 public class Matrix {
 	private int TamMatrix = 0;
 	private double A[][];
@@ -84,4 +94,14 @@ public class Matrix {
                 A[j][i] = temp; 
             } 
     }
+
+	public int checkSum() {
+		int res = 0;
+		for (double[] row : A) {
+			for (double value : row) {
+				res += value;
+			}
+		}
+		return res;
+	}
 }

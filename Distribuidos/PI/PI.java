@@ -1,5 +1,8 @@
-package PI;
-
+/*******************************
+ * 
+ * Autor: Andrés Rodarte López
+ * 
+ *******************************/
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
@@ -18,57 +21,69 @@ public class PI {
 		double PIaux = 0;
 		
 		try {
-			node = Integer.parseInt(args[0]);
+			//Asignamos el número de nodo
+			node = Integer.parseInt(args[0]);	
 		} catch (final NumberFormatException e) {
 			System.err.println("One or mores arguments are not an integer or missing.");
 			System.exit(1);
 		}
 
 		try {
+			//Flujo principal: Nodo 0
 			if (node == 0) {
 				final ServerSocket server = new ServerSocket(5050);
+				//Creamos tres Thread con los primeros tres clientes en conectarse
 				for (int i = 0; i < 3; i++) {
 					final Socket conexion = server.accept();
+					//El manejador de conexión se encarga del resto
 					final InnerPIWorker w = new InnerPIWorker(conexion);
 					w.start();
 					System.out.println("Cliente conectado");
 				}
+				//Calculamos la parte que le toca hacer 
 				for (int i = 0; i < 10000000; i++) {
 					PIaux += 1.0 / (8 * i + 1);
 				}
+				//Agregamos la parte de la suma
 				synchronized (lock) {
 					pi += PIaux;
 					n++;
 				}
+				//Esperamos que los demás nodos terminen
 				while (true) {
 					synchronized (lock) {
 						if (n == 4) {
 							break;
 						}
+						//Para no bloquear el candado
 						Thread.sleep(100);
 					}
 				}
+				/*******************
+					FINAL
+				********************/
 				System.out.println(4 * pi);
 				server.close();
 			} else {
+				/*************
+				 *  Nodo Cliente
+				 *************/
 				final Socket conexion = new Socket("localhost", 5050);
 				final DataOutputStream salida = new DataOutputStream(conexion.getOutputStream());
-				final DataInputStream entrada = new DataInputStream(conexion.getInputStream());
-	
+				//Como recibimos como parametro el nodo que es
+				//Podemos ejecutar directamente la suma que le toca
 				for (int i = 0; i < 10000000; i++) {
 					PIaux += 1.0 / (8 * i + (node - 1) * 2 + 3);
 				}
-				// envia un n�mero punto flotante
+				// envia un número punto flotante con su parte de la suma
 				salida.writeDouble((node % 2 == 0) ? PIaux : -PIaux);
-	
 				salida.flush();
 	
 				salida.close();
-				entrada.close();
 				conexion.close();
 			}	
 		} catch (Exception e) {
-			//TODO: handle exception
+			System.err.println(e);
 		}
 		
 	}
@@ -91,17 +106,18 @@ public class PI {
 				final DataOutputStream out = new DataOutputStream(this.conexion.getOutputStream());
 				final double x = in.readDouble();
 				System.out.println("Recibed: " + x);
+				//Una vez recibimos la parte calculada la sumamos y aumentamos el contador
 				synchronized (lock) {
-					pi += x;
-					n++;
+					PI.pi += x;
+					PI.n++;
 				}
 
 				conexion.close();
 				in.close();
 				out.close();
 			} catch (final Exception e) {
-                 //TODO: handle exception
-             }
+                System.err.println(e);
+            }
              
          }
         

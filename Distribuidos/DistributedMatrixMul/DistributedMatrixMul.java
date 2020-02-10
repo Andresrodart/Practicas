@@ -1,3 +1,9 @@
+/**
+ * 
+ * Programam Driver
+ * By: Andrès Rodarte López
+ * Distributed matrix multiplication
+ */
 public class DistributedMatrixMul {
 
     public static void main (String[] args) {
@@ -16,6 +22,7 @@ public class DistributedMatrixMul {
 			partition with at least 2 nodes and alway by the most close
 			pair conexions.
 		*/
+		// first node should have one parametes, the size of both matrix
 		if (args.length > 0) {
 			try {
 				//nodes = Integer.parseInt(args[1]); Need to think how to segment the matrix for different nodes
@@ -31,6 +38,7 @@ public class DistributedMatrixMul {
 
 			NodeZero n0 = new NodeZero(TamMatrix, nodes);
 			n0.solve();
+		//Else we execute the client code
 		}else{
 			Node node = new Node(TamMatrix);
 			node.solve();
