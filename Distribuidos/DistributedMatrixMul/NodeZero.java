@@ -32,8 +32,8 @@ public class NodeZero {
 			}
 
 		B.transpose();
-		A.printMatrix();
-		B.printMatrix();
+		if(A.length < 10) A.printMatrix();
+		if(B.length < 10)B.printMatrix();
 	}
 
 	public void solve() {
