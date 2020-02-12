@@ -1,3 +1,7 @@
+#include <stdio.h> 
+#include <string.h>
+#include "Infix2Posfix.H"
+#include "Thompson.h"
 /*
 	Autor: Andrés Rodarte López
 	Description: Program that recives a ReGex and produces
@@ -14,17 +18,16 @@
 	
 */
 
-#include <stdio.h> 
-#include <string.h>
-#include "Infix2Posfix.H"
-#include "Thompson.h"
-
 int main(int n, char const *argv[]){
 	srand(time(0)); 
     int len = strlen(argv[1]);
 	char * ReGex = (char *) calloc(len, sizeof(char));
 	strcpy(ReGex, argv[1]);
 	infixToPostfix(ReGex);
-	printf(makeInnerSymExp(ReGex[0], 0, 1, 0));
+	struct Thompson * T1 = newThompson(makeInnerSymExp(ReGex[0], '0', '1', '0'), '0', '1');
+	struct Thompson * T2 = newThompson(makeInnerSymExp(ReGex[1], '2', '3', '1'), '2', '3');
+	struct Thompson * T3 = makeInnerUniExp(*T1, *T2, '4', '5', '2');
+	struct Thompson * T4 = makeInnerConcat(T3, T1, '3');
+	printf(T4 -> expression);
     return 0;
 }

@@ -1,4 +1,3 @@
-// C program for array implementation of queue 
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <limits.h> 
