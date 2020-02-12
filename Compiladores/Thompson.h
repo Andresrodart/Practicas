@@ -3,12 +3,13 @@
 	TABLE WITH INITAL STATE, FINAL STATE, ETC. 
 */
 
+#include <inttypes.h>
 #include <string.h>
 #include <stdlib.h>
 #include <string.h> 
 #include <stdio.h>
 #include <time.h> 
-
+#include <math.h>
 struct Graph{
 	int nStates;
 	char q, f, * graph;
@@ -16,44 +17,48 @@ struct Graph{
 
 struct Thompson{
 	char * expression;
-	char reference[2];
+	int reference[2];
 	/*
 		reference
 			0: q
 			1: f
 	*/
 };
+
+int True = 1, False = 0;
+
 char * subgraph = "\
-	subgraph cluster_%c{\
+	subgraph cluster_%d{\
 		style = \"rounded,filled\";\
 		color = \"#000000\";\
 		fillcolor = \"%4.3f 0.3 0.9\";\
 		node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white];\
 		%s\
-		label = \"cluster %c\";\
+		label = \"cluster %d\";\
 	}\
 ";
 
 char * empty_expression = ".\
-	-%c- -> -%c- [ label = \"&epsilon;\" ];\
+	@%d ~ -> @%d ~ [ label = \"&epsilon;\" ];\
 ";
 
 const char * symbol_expression = "\
-	-%c- -> -%c- [ label = \"%c\" ];\
+	@%d ~ -> @%d ~ [ label = \"%c\" ];\
 ";
 
 char * union_expression = "\
-	-%c- -> -%c- [ label = \"&epsilon;\" ]; %s  -%c- -> -%c- [ label = \"&epsilon;\" ];\
-	-%c- -> -%c- [ label = \"&epsilon;\" ]; %s  -%c- -> -%c- [ label = \"&epsilon;\" ];\
+	@%d ~ -> @%d ~ [ label = \"&epsilon;\" ]; %s  @%d ~ -> @%d ~ [ label = \"&epsilon;\" ];\
+	@%d ~ -> @%d ~ [ label = \"&epsilon;\" ]; %s  @%d ~ -> @%d ~ [ label = \"&epsilon;\" ];\
 ";
 
 char * concat_expression = "\
-	%c; %s %s \
+	@%d ~; %s %s \
 \
 ";
 
-struct Thompson * newThompson(char * exp, char q, char f){
-	int len = strlen(exp) + 2;
+struct Thompson * newThompson(char * exp, int q, int f){
+	int len = strlen(exp) * 2;
+	//printf("%s \n \n %d \n", exp, len);
 	struct Thompson * aux = (struct Thompson *) malloc(sizeof(struct Thompson));
 	if (!aux)
 		perror("No Thompson struct allocation");
@@ -69,6 +74,15 @@ struct Thompson * newThompson(char * exp, char q, char f){
 	return aux;
 }
 
+void clean(char* s) {
+    const char* d = s;
+    do {
+        while ( *d == '@' | *d == '~') {
+            ++d;
+        }
+    } while (*s++ = *d++);
+}
+
 void remove_spaces(char* s) {
     const char* d = s;
     do {
@@ -78,14 +92,52 @@ void remove_spaces(char* s) {
     } while (*s++ = *d++);
 }
 
-char * makeSymExp(char var, char q, char f){
+int compare(char * s, int i, char * c){
+	s = s + i + 1;
+	do{
+		if (*s != *c)
+			return False;
+	}while (*(++s) != '~' && *(++c) != '~');
+	return True;
+}
+
+int changeValue(struct Thompson * one, int i, int serial, int * max){
+	char * s = one -> expression;
+	int j = i, k = 0, x;
+	while (*(s + j) != '~')	j++;
+	char * aux = (char * ) calloc(j - i + 10, sizeof(char));
+	char * tmp = (char * ) calloc(strlen(s) * 2, sizeof(char));
+	j = i + 1;
+	do {
+		aux[k++] = *(s + j);
+		j++;
+	}while (*(s + j) != '~');
+	j = i + 3;
+	*(s + i + 1) = '%';
+	*(s + i + 2) = 's';
+	
+	while(*(s + j) != '~'){
+		*(s + j) = ' ';
+		j++;
+	}
+	
+	x = serial + strtoumax(aux, NULL, 10);
+	*max = (*max > x)? *max : x;
+	sprintf(aux, "%d ", x);
+	sprintf(tmp, s, aux);
+	(*one).expression = tmp;
+	for (i; *(s + i) != '~'; i++);
+	return i + 1;
+}
+
+char * makeSymExp(char var, int q, int f){
 	char  * str = (char * ) calloc(29, sizeof(char));
-	sprintf(str, "%c -> %c [ label = \"%c;\" ];", q, f, var);
+	sprintf(str, "@%d ~ -> @%d ~ [ label = \"%c;\" ];", q, f, var);
 	remove_spaces(str);
 	return str;
 }
 
-char * makeInnerSymExp(char var, char q, char f, char cluster){
+char * makeInnerSymExp(char var, int q, int f, int cluster){
 	char * str = (char * ) calloc(strlen(subgraph) + strlen(symbol_expression) + 1, sizeof(char));
 	char * aux = (char * ) calloc(strlen(symbol_expression) + 1, sizeof(char));
 	sprintf(aux, symbol_expression, q, f, var);
@@ -94,7 +146,7 @@ char * makeInnerSymExp(char var, char q, char f, char cluster){
 	return str;
 }
 
-struct Thompson * makeInnerUniExp (struct Thompson one, struct Thompson two, char q, char f, char cluster){
+struct Thompson * makeInnerUniExp (struct Thompson one, struct Thompson two, int q, int f, int cluster){
 	int len = strlen(union_expression) + strlen(one.expression) + strlen(two.expression) + 1;
 	char * str = (char * ) calloc(len + strlen(subgraph), sizeof(char));
 	char * aux = (char * ) calloc(len, sizeof(char));
@@ -105,22 +157,33 @@ struct Thompson * makeInnerUniExp (struct Thompson one, struct Thompson two, cha
 	remove_spaces(str);
 	return newThompson(str, q, f);
 }
-//Use @ and ~ to delimit var names
-struct Thompson * makeInnerConcat(struct Thompson * one, struct Thompson * two, int cluster){
-	int len = strlen(concat_expression) + strlen(one->expression) + strlen(two->expression) + 1;
-	char * str = (char * ) calloc(len + strlen(subgraph), sizeof(char));
-	char * aux = (char * ) calloc(len, sizeof(char));
-	char q2 = two -> reference[0];
-	for (size_t i = 0; i < strlen(two -> expression) - 3; i++)
-		if (two -> expression[i + 1] == '-' && two -> expression[i] == q2 &&  two -> expression[i + 2] == '-')
-			two -> expression[i] = one -> reference[1];
-	
-	sprintf(aux, concat_expression, q2, one -> expression, two -> expression);
-	sprintf(str, subgraph, cluster, (float) (rand() % 1000)/1000, aux, cluster);
 
-	two -> reference[0] = one -> reference[1];
-	return newThompson(str, one -> reference[0], two -> reference[1]);
+//Use @ and ~ to delimit var names R y L son el mismo apuntador si mando el amisma estructura
+struct Thompson * makeInnerConcat(struct Thompson R, struct Thompson L, int cluster, int serial){
+	struct Thompson * one = &R, * two = &L;
+	printf("-> %s \n \n \n", one -> expression);
+	int len = strlen(concat_expression) + strlen(one->expression) + 2 * strlen(two->expression) + 10, max = 0;
+	char * f1  = (char * ) calloc(log10(one -> reference[1] + 1) + 2, sizeof(char));
+	char * q2  = (char * ) calloc(log10(two -> reference[0] + 1) + 2, sizeof(char));
+	char * aux = (char * ) calloc(len * 2, sizeof(char));
+	char * str = (char * ) calloc(len + strlen(subgraph), sizeof(char));
+	sprintf(f1, "%d ~", one -> reference[1]);
+	sprintf(q2, "%d ~", two -> reference[0]);
+	for (int i = 0; i < strlen(two -> expression); i++)
+		if (two -> expression[i] == '@')
+			if(compare(two -> expression, i, q2)){
+				for (int j = 0; f1[j] != '~'; j++)
+					two -> expression[++i] = f1[j];
+			}else{
+				i = changeValue(two , i, serial, &max);
+			}
 	
+	sprintf(aux, concat_expression, one -> reference[1], one -> expression, two -> expression);
+	sprintf(str, subgraph, cluster, (float) (rand() % 1000)/1000, aux, cluster);
+	remove_spaces(str);
+	printf("-> %s \n \n \n", one -> expression);
+	two -> reference[0] = one -> reference[1];
+	return newThompson(str, one -> reference[0], max);
 }
 
 void addExpression(struct Graph * graph, char * exp){
