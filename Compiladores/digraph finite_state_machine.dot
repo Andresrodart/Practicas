@@ -1,6 +1,11 @@
-digraph finite_state_machine {
-    rankdir=LR;
-	subgraph cluster_3{style = "rounded,filled";color = "#000000";fillcolor = "0.526 0.3 0.9";node [style = "rounded,filled", color = "#000000", fillcolor = white];1 ; subgraph cluster_0{style = "rounded,filled";color = "#000000";fillcolor = "0.407 0.3 0.9";node [style = "rounded,filled", color = "#000000", fillcolor = white];0  -> 1  [ label = "a" ];label = "cluster 0";} subgraph cluster_0{style = "rounded,filled";color = "#000000";fillcolor = "0.407 0.3 0.9";node [style = "rounded,filled", color = "#000000", fillcolor = white];1  -> 6  [ label = "a" ];label = "cluster 0";} label = "cluster 3";}
-}
+digraph finite_state_machine{
+        style = "rounded,filled";
+        color = "#000000";
+        fillcolor = "0.759 0.3 0.9";
+        node [style = "rounded,filled", color = "#000000", fillcolor = white];
+                0 -> 1 [ label = "a" ];
+        1 -> 2 [ label = "b" ];
+        label = "NFA of Thompson";
+  }
 //dot -Tpng elemplo.gv > salida.png
 //((struct Thompson *)0xb34f90)->expression

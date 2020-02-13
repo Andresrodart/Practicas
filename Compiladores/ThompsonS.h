@@ -240,4 +240,15 @@ void addExpression(struct Graph * graph, char * exp){
 /*
 	Need a table to keep track of which is the final
 	and initial node.
+
+	int len = strlen(argv[1]);
+	// char * ReGex = (char *) calloc(len, sizeof(char));
+	// strcpy(ReGex, argv[1]);
+	// infixToPostfix(ReGex);
+	// struct Thompson * T1 = newThompson(makeInnerSymExp(ReGex[0], 0, 1, 0), 0, 1);
+	// struct Thompson * T2 = newThompson(makeInnerSymExp(ReGex[1], 2, 3, 1), 2, 3);
+	// struct Thompson * T3 = makeInnerUniExp(*T1, *T2, 4, 5, 2);
+	// struct Thompson * T4 = makeInnerConcat(*T1, *T1, 3, 6 - 1);
+	// clean(T4 -> expression);
+	// printf(T4 -> expression);
 */
