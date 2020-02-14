@@ -1,10 +1,9 @@
-
 digraph finite_state_machine{
     rankdir=LR;
     subgraph cluster{
         style = "rounded,filled";
         color = "#000000";
-        fillcolor = "0.698 0.3 0.9";
+        fillcolor = "0.809 0.3 0.9";
         node [shape = point ] qi;
         node [style = "rounded,filled", color = "#000000", fillcolor = white, shape = doublecircle] 9;
         node [style = "rounded,filled", color = "#000000", fillcolor = white, shape="oval"];
