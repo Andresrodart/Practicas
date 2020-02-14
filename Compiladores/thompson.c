@@ -42,10 +42,11 @@ struct Thompson * makeConcatenation(char * regex, int * len){
     resR = readReGex(regex, len);
     resL = readReGex(regex, len);
 	aux = resL;
-    while (aux->nodes != NULL) aux = aux->nodes[0];
+    while (aux->final != True) aux = aux->nodes[0];
+    //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
     aux->n = resR->n;
     aux->desc = resR->desc;
-    aux->final = resR->final;
+    aux->final = False;
 	aux->nodes = resR->nodes;
     return resL;
 }
@@ -71,17 +72,27 @@ struct Thompson * makeAlternation(char * regex, int * len){
 struct Thompson * makeKleene(char * regex, int * len){
     struct Thompson * res, * aux, * end;
     res = makeNode(2);
+    end = makeNode(2);
+    
     res->desc[0] = epsilonDot; 
     res->desc[1] = epsilonDot; 
-    res->nodes[0] = readReGex(regex, len); 
-    
-    end = makeNode(2);
     end->desc[0] = epsilonDot; 
     end->desc[1] = epsilonDot; 
+    
+    res->nodes[0] = readReGex(regex, len); 
     end->nodes[0] = makeNode(0);
-
-    end->nodes[1] = res->nodes[0]; 
+    
     res->nodes[1] = end->nodes[0];
+    end->nodes[1] = res->nodes[0]; 
+    
+    aux = res;
+    while (aux->final != True) aux = aux->nodes[0];
+    //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
+    aux->n = end->n;
+    aux->desc = end->desc;
+    aux->final = False;
+	aux->nodes = end->nodes;
+    
     return res;
 }
 
@@ -89,7 +100,9 @@ void giveId(struct Thompson * q, int * serial){
     if (q->id == UINT_MAX)
         q->id = (int) (*serial)++;
     for (int i = 0; i < q->n; i++)
-        giveId(q->nodes[i], serial);
+        if (!q->nodes[i]->visited && q->nodes[i]->id > q->id)
+            giveId(q->nodes[i], serial);
+    q->visited = True;
 }
 
 int makeString(struct Thompson * q, char * * output){
@@ -107,12 +120,13 @@ int makeString(struct Thompson * q, char * * output){
 		sprintf(tmp, transitionDot, q->id, q->nodes[i]->id, q->desc[i]);
 		strcat(aux, tmp);
 	}
-    if(!q->visited){
+    if(q->visited){
 	    *output = aux;
-        q->visited = True;
+        q->visited = False;
     }
 	for (int i = 0; i < q->n; i++)
-		makeString( q->nodes[i], output);
+        if (q->nodes[i]->visited && q->nodes[i]->id > q->id)
+		    makeString( q->nodes[i], output);
 	return 0;
 }
 

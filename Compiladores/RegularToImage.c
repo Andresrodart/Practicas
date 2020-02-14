@@ -32,6 +32,6 @@ int main(int n, char const *argv[]){
 	
 	strcpy(ReGex, argv[1]);
 	res = getDotNotation(graph, ReGex);
-	printf(res, "--");
+	printf(res);
 	return 0;
 }
