@@ -14,9 +14,12 @@ struct Thompson * readReGex(char * regex, int * len){
         return makeConcatenation(regex, len);
     else if (x == '|')
         return makeAlternation(regex, len);
+    else if (x == '+')
+        return makeAdd(regex, len);
     else if (x == '*')
         return makeKleene(regex, len);
-    
+	else
+		perror("No recognized character");
 }
 
 struct Thompson * makeNode(int n){
@@ -84,6 +87,30 @@ struct Thompson * makeKleene(char * regex, int * len){
     
     res->nodes[1] = end->nodes[0];
     end->nodes[1] = res->nodes[0]; 
+    
+    aux = res;
+    while (aux->final != True) aux = aux->nodes[0];
+    //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
+    aux->n = end->n;
+    aux->desc = end->desc;
+    aux->final = False;
+	aux->nodes = end->nodes;
+    
+    return res;
+}
+
+struct Thompson * makeAdd(char * regex, int * len){
+    struct Thompson * res, * aux, * end;
+    res = makeLieteral(epsilonDot);
+    end = makeNode(2);
+     
+    end->desc[0] = epsilonDot; 
+    end->desc[1] = epsilonDot; 
+    
+    res->nodes[0] = readReGex(regex, len); 
+    end->nodes[0] = makeNode(0);
+    
+	end->nodes[1] = res->nodes[0]; 
     
     aux = res;
     while (aux->final != True) aux = aux->nodes[0];

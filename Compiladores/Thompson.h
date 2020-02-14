@@ -27,6 +27,8 @@ struct Thompson * makeConcatenation(char * regex, int * len);
 struct Thompson * makeAlternation(char * regex, int * len);
 /*Make a Kleene template, fill it and return a pointer to q*/
 struct Thompson * makeKleene(char * regex, int * len);
+/*Make a add (+) template, fill it and return a pointer to q*/
+struct Thompson * makeAdd(char * regex, int * len);
 /*Make string for .dot file*/
 int makeString(struct Thompson * q, char * * output);
 /*Give id to all nodes recursivly*/
