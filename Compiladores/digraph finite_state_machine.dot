@@ -1,11 +1,25 @@
 digraph finite_state_machine{
-        style = "rounded,filled";
+    rankdir=LR;
+    subgraph cluster{        style = "rounded,filled";
         color = "#000000";
-        fillcolor = "0.759 0.3 0.9";
-        node [style = "rounded,filled", color = "#000000", fillcolor = white];
-                0 -> 1 [ label = "a" ];
-        1 -> 2 [ label = "b" ];
-        label = "NFA of Thompson";
-  }
+        fillcolor = "0.641 0.3 0.9";
+        node [shape = point ] qi;
+        node [style = "rounded,filled", color = "#000000", fillcolor = white, shape = doublecircle] 6;
+        node [style = "rounded,filled", color = "#000000", fillcolor = white, shape="oval"];
+        qi -> 0 [ label = "Start" ];
+        0 -> 1 [ label = "&epsilon;" ];
+        0 -> 7 [ label = "&epsilon;" ];
+        1 -> 2 [ label = "c" ];
+        2 -> 3 [ label = "d" ];
+        3 -> 4 [ label = "&epsilon;" ];
+        4 -> 5 [ label = "a" ];
+        5 -> 6 [ label = "b" ];
+        7 -> 8 [ label = "a" ];
+        8 -> 9 [ label = "b" ];
+        9 -> 4 [ label = "&epsilon;" ];
+        label = "NFA of Thompson of: (a.b)|(c.d).a.b";
+
+    }
+}
 //dot -Tpng elemplo.gv > salida.png
 //((struct Thompson *)0xb34f90)->expression

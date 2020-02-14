@@ -3,9 +3,9 @@
 /*Struct for each node in a Thompson NFA*/
 struct Thompson{
     /*id, number of conections or bool flag for final*/
-	unsigned int id, n, final;
+	unsigned int id, n, final, visited;
     /*Describe movement to nodes[i] whith char[i]*/
-    char * desc;
+    char * * desc;
     /*0: R - 1: L*/
     struct Thompson * * nodes;
 };
@@ -20,13 +20,22 @@ and id = UINT_MAX if not defined
     struct Thompson * * nodes;*/
 struct Thompson * makeNode(int n);
 /*Make a literal tamplate, fill it and return a pointer to q*/
-struct Thompson * makeLieteral(char x);
+struct Thompson * makeLieteral(char * x);
 /*Make a concatenation template, fill it and return a pointer to q*/
 struct Thompson * makeConcatenation(char * regex, int * len);
+/*Make a alternation template, fill it and return a pointer to q*/
+struct Thompson * makeAlternation(char * regex, int * len);
+/*Make a Kleene template, fill it and return a pointer to q*/
+struct Thompson * makeKleene(char * regex, int * len);
 /*Make string for .dot file*/
 int makeString(struct Thompson * q, char * * output);
 /*Give id to all nodes recursivly*/
 void giveId(struct Thompson * q, int * serial);
+/*Auxilair function to get the code in .dot format */
+char * getDotNotation(struct Thompson * q, char * Regex);
+/*Auxliar function to transform char into char* */
+char * charToString(char x);
+
 #endif // THOMPSON_h_
 
 #if !defined(True)
@@ -44,19 +53,32 @@ void giveId(struct Thompson * q, int * serial);
 
 #if !defined(transitionDot)
 /*Basic transition in .dot notation %d -> %d [ label = \"%s\" ];\0*/
-#define transitionDot "\t%d -> %d [ label = \"%c\" ];\0"
+#define transitionDot "\t%d -> %d [ label = \"%s\" ];\n\0"
 #endif
 
-#if !defined(graphDot)
+#if !defined(finalStateDot)
+/*Basic transition in .dot notation %d -> %d [ label = \"%s\" ];\0*/
+#define finalStateDot "\tnode [shape = doublecircle] %d;\n\0"
+#endif
+
+#if !defined(graphDotHeader)
 /*Basic graph in .dot notation */
-#define graphDot "\
+#define graphDotHeader "\
 digraph finite_state_machine{\n\
     rankdir=LR;\n\
-	style = \"rounded,filled\";\n\
-	color = \"#000000\";\n\
-	fillcolor = \"%4.3f 0.3 0.9\";\n\
-	node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white];\n\
-	%s\
-}\
+    subgraph cluster{\n\
+        style = \"rounded,filled\";\n\
+        color = \"#000000\";\n\
+        fillcolor = \"%4.3f 0.3 0.9\";\n\
+        node [shape = point ] qi;\n\
+        node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white, shape = doublecircle] %d;\n\
+        node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white, shape=\"oval\"];\n\
+        qi -> 0 [ label = \"Start\" ];\n"
+#endif
+#if !defined(graphDotTail)
+/*Basic graph in .dot notation */
+#define graphDotTail "\
+    }\n\
+}\0\
 "
 #endif

@@ -7,9 +7,11 @@ int Prec(char ch) {
 	switch (ch) { 
 		case '+': 
 			return 1; 
-		case '.': 
-			return 2; 
 		case '*': 
+			return 1; 
+		case '.': 
+			return 2;
+		case '|': 
 			return 3; 
 	} 
 	return -1; 
