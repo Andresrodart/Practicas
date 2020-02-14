@@ -56,17 +56,20 @@ struct Thompson * makeConcatenation(char * regex, int * len){
 
 struct Thompson * makeAlternation(char * regex, int * len){
     struct Thompson * res, * aux, * end;
-    end = makeNode(0);
     res = makeNode(2);
+    end = makeLieteral(epsilonDot);
     res->desc[0] = epsilonDot; 
     res->desc[1] = epsilonDot; 
     res->nodes[0] = readReGex(regex, len); 
     res->nodes[1] = readReGex(regex, len); 
-    for(int i = 0; i < res->n; i++){
+    
+	for(int i = 0; i < res->n; i++){
         aux = res->nodes[i];
-        while (aux->nodes[0]->final != True) aux = aux->nodes[0];
-        aux->nodes[0] = makeLieteral(epsilonDot);
-        aux->nodes[0]->nodes[0] = end;
+        while (aux->final != True) aux = aux->nodes[0];
+        aux->n = end->n;
+    	aux->desc = end->desc;
+    	aux->final = False;
+		aux->nodes = end->nodes;
     }
     
     return res; 
@@ -85,8 +88,8 @@ struct Thompson * makeKleene(char * regex, int * len){
     res->nodes[0] = readReGex(regex, len); 
     end->nodes[0] = makeNode(0);
     
-    res->nodes[1] = end->nodes[0];
     end->nodes[1] = res->nodes[0]; 
+    res->nodes[1] = end->nodes[0];
     
     aux = res;
     while (aux->final != True) aux = aux->nodes[0];
