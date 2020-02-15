@@ -29,14 +29,16 @@ int main(int n, char const *argv[]){
 	srand(time(0)); 
 	
 	strcpy(ReGex, argv[1]);
+	ReGex = addCntSym(ReGex);
+	printf(ReGex);
 	infixToPostfix(ReGex);
     len = strlen(ReGex);
-	struct Thompson * graph = readReGex(ReGex, &len);
 	
+	struct Thompson * graph = readReGex(ReGex, &len);
 	strcpy(ReGex, argv[1]);
+	
 	res = getDotNotation(graph, ReGex);
 	int x = fprintf(out_file, res);
-	printf("%d", x);
 	fclose(out_file);
 	return 0;
 }

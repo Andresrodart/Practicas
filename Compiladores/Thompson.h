@@ -37,6 +37,8 @@ void giveId(struct Thompson * q, int * serial);
 char * getDotNotation(struct Thompson * q, char * Regex);
 /*Auxliar function to transform char into char* */
 char * charToString(char x);
+/*Auxiliar function to add . to a Regex*/
+char * addCntSym(char * regex);
 
 #endif // THOMPSON_h_
 

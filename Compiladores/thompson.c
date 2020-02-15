@@ -122,7 +122,6 @@ struct Thompson * makeAdd(char * regex, int * len){
     aux->desc = end->desc;
     aux->final = False;
 	aux->nodes = end->nodes;
-    
     return res;
 }
 
@@ -151,7 +150,10 @@ int makeString(struct Thompson * q, char * * output){
 		strcat(aux, tmp);
 	}
     if(q->visited){
+        free(tmp);
+        tmp = *output;
 	    *output = aux;
+        free(tmp);
         q->visited = False;
     }
 	for (int i = 0; i < q->n; i++)
@@ -180,4 +182,14 @@ char * getDotNotation(struct Thompson * q, char * Regex){
 	strcat(res, aux);
 	strcat(res, graphDotTail);
 	return res;
+}
+
+char * addCntSym(char * regex){
+    char * aux = (char *) malloc(2 * strlen(regex) * sizeof(char)), * res;
+    res = aux;
+    while (*aux++ = *regex++)
+        if (isalpha( *regex ))
+            *aux++ = '.';
+    free(aux);
+    return res;
 }

@@ -59,8 +59,7 @@ int infixToPostfix(char* exp){
   
 	// pop all the operators from the stack 
 	while (!isEmpty(stack)) 
-		exp[++k] = pop(stack ); 
+		exp[++k] = pop(stack); 
   
 	exp[++k] = '\0'; 
-	printf( "Proxix = %s\n", exp); 
 } 
