@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include "Infix2Posfix.h" // infixToPostfix and isGrouping
 #include "thompson.h"
 
 struct Thompson * readReGex(char * regex, int * len){
@@ -19,7 +20,21 @@ struct Thompson * readReGex(char * regex, int * len){
     else if (x == '*')
         return makeKleene(regex, len);
 	else
-		perror("No recognized character");
+		__errorHandler(0, charToString(x));
+}
+
+struct Thompson * makeGraph(char * regex){
+	struct Thompson * graph;
+	int len;
+
+	if(!hasConcatSym(regex))
+		regex = addConcatSym(regex);
+	
+	infixToPostfix(regex);
+	len = strlen(regex);
+	graph = readReGex(regex, &len);
+	
+	return graph;
 }
 
 struct Thompson * makeNode(int n){
@@ -41,21 +56,16 @@ struct Thompson * makeLieteral(char * x){
 }
 
 struct Thompson * makeConcatenation(char * regex, int * len){
-    struct Thompson * resL, * resR, * aux;
+    struct Thompson * resL, * resR;
     resR = readReGex(regex, len);
     resL = readReGex(regex, len);
-	aux = resL;
-    while (aux->final != True) aux = aux->nodes[0];
     //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
-    aux->n = resR->n;
-    aux->desc = resR->desc;
-    aux->final = False;
-	aux->nodes = resR->nodes;
+    copyStruct(getFinal(resL), resR);
     return resL;
 }
 
 struct Thompson * makeAlternation(char * regex, int * len){
-    struct Thompson * res, * aux, * end;
+    struct Thompson * res, * end;
     res = makeNode(2);
     end = makeLieteral(epsilonDot);
     res->desc[0] = epsilonDot; 
@@ -63,20 +73,14 @@ struct Thompson * makeAlternation(char * regex, int * len){
     res->nodes[0] = readReGex(regex, len); 
     res->nodes[1] = readReGex(regex, len); 
     
-	for(int i = 0; i < res->n; i++){
-        aux = res->nodes[i];
-        while (aux->final != True) aux = aux->nodes[0];
-        aux->n = end->n;
-    	aux->desc = end->desc;
-    	aux->final = False;
-		aux->nodes = end->nodes;
-    }
+	for(int i = 0; i < res->n; i++)
+        copyStruct(getFinal(res->nodes[i]), end);
     
     return res; 
 }
 
 struct Thompson * makeKleene(char * regex, int * len){
-    struct Thompson * res, * aux, * end;
+    struct Thompson * res, * end;
     res = makeNode(2);
     end = makeNode(2);
     
@@ -91,19 +95,14 @@ struct Thompson * makeKleene(char * regex, int * len){
     end->nodes[1] = res->nodes[0]; 
     res->nodes[1] = end->nodes[0];
     
-    aux = res;
-    while (aux->final != True) aux = aux->nodes[0];
     //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
-    aux->n = end->n;
-    aux->desc = end->desc;
-    aux->final = False;
-	aux->nodes = end->nodes;
+   	copyStruct(getFinal(res), end);
     
     return res;
 }
 
 struct Thompson * makeAdd(char * regex, int * len){
-    struct Thompson * res, * aux, * end;
+    struct Thompson * res, * end;
     res = makeLieteral(epsilonDot);
     end = makeNode(2);
      
@@ -114,15 +113,10 @@ struct Thompson * makeAdd(char * regex, int * len){
     end->nodes[0] = makeNode(0);
     
 	end->nodes[1] = res->nodes[0]; 
-    
-    aux = res;
-    while (aux->final != True) aux = aux->nodes[0];
     //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
-    aux->n = end->n;
-    aux->desc = end->desc;
-    aux->final = False;
-	aux->nodes = end->nodes;
-    return res;
+    copyStruct(getFinal(res), end);
+	
+	return res;
 }
 
 void giveId(struct Thompson * q, int * serial){
@@ -135,7 +129,9 @@ void giveId(struct Thompson * q, int * serial){
 }
 
 int makeString(struct Thompson * q, char * * output){
-    if (q->n == 0)
+    if(q->n == 0)
+		return 0;
+	if(!q->visited)
 		return 0;
 
 	int len = 2*strlen(*output) + 4*strlen(transitionDot) + 2*strlen(epsilonDot);
@@ -143,19 +139,17 @@ int makeString(struct Thompson * q, char * * output){
 	char * tmp = (char *) calloc(len, sizeof(char));
 	strcpy(aux, *output);
 
-	if (!aux)
-		perror("No spaces for string");
+	if (!aux) perror("No spaces for string");
 	for (int i = 0; i < q->n; i++){
 		sprintf(tmp, transitionDot, q->id, q->nodes[i]->id, q->desc[i]);
 		strcat(aux, tmp);
 	}
-    if(q->visited){
-        free(tmp);
-        tmp = *output;
-	    *output = aux;
-        free(tmp);
-        q->visited = False;
-    }
+    
+	tmp = *output;
+	*output = aux;
+    free(tmp);
+    q->visited = False;
+    
 	for (int i = 0; i < q->n; i++)
         if (q->nodes[i]->visited && q->nodes[i]->id > q->id)
 		    makeString( q->nodes[i], output);
@@ -169,27 +163,55 @@ char * charToString(char x){
     return res;
 }
 
-char * getDotNotation(struct Thompson * q, char * Regex){
+char * getDotNotation(struct Thompson * __q, char * Regex){
     int i = 0, finalState;
-    struct Thompson * iterator = q;
+    struct Thompson * iterator = getFinal(__q);
 	char * res = (char *) malloc(2 * strlen(graphDotHeader) * sizeof(char));
 	char * aux = (char *) malloc((strlen(res) + 35) * sizeof(char));
-    while (!iterator->final) iterator = iterator->nodes[0];
-    giveId(q, &i);
+    giveId(__q, &i);
 	sprintf(res, graphDotHeader, (float) (rand() % 1000)/1000, iterator->id);
-	makeString(q, &res);
+	makeString(__q, &res);
     sprintf(aux,"\tlabel = \"NFA of Thompson of: %s\";\n", Regex);
 	strcat(res, aux);
 	strcat(res, graphDotTail);
+	free(aux);
 	return res;
 }
 
-char * addCntSym(char * regex){
+char * addConcatSym(char * regex){
     char * aux = (char *) malloc(2 * strlen(regex) * sizeof(char)), * res;
     res = aux;
     while (*aux++ = *regex++)
-        if (isalpha( *regex ))
+        if (isalpha( *regex ) && !isGruping(*(regex - 1)))
             *aux++ = '.';
     free(aux);
     return res;
+}
+
+void copyStruct(struct Thompson * __dest, struct Thompson * __src ){
+	__dest->n = __src->n;
+    __dest->desc = __src->desc;
+    __dest->final = False;
+	__dest->nodes = __src->nodes;
+}
+
+struct Thompson * getFinal(struct Thompson * __init){
+	while (!__init->final) __init = __init->nodes[0];
+	return __init;
+}
+
+void __errorHandler(int __cod, char * __inf){
+	char * msg = (char *) malloc(120 * sizeof(char));
+	if(__cod == 0)
+		sprintf(msg, "No recognized character: --- %s ---", __inf);
+	
+	perror(msg);
+	free(msg);
+}
+
+int hasConcatSym(char * __regex){
+	while (*__regex++ != '\0')
+		if (*__regex == '.')
+			return True;
+	return False;			
 }

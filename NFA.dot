@@ -3,7 +3,7 @@ digraph finite_state_machine{
     subgraph cluster{
         style = "rounded,filled";
         color = "#000000";
-        fillcolor = "0.220 0.3 0.9";
+        fillcolor = "0.002 0.3 0.9";
         node [shape = point ] qi;
         node [style = "rounded,filled", color = "#000000", fillcolor = white, shape = doublecircle] 7;
         node [style = "rounded,filled", color = "#000000", fillcolor = white, shape="oval"];

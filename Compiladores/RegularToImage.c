@@ -2,7 +2,6 @@
 #include <stdlib.h> 
 #include <string.h>
 #include <time.h>
-#include "Infix2Posfix.H"
 #include "thompson.h"
 /*
 	Autor: Andrés Rodarte López
@@ -21,23 +20,19 @@
 */
 
 int main(int n, char const *argv[]){
-	int len = strlen(argv[1]), i = 0;
+	int len = strlen(argv[1]);
 	char * ReGex = (char *) calloc(len, sizeof(char)), * res;
 	FILE * out_file = fopen("NFA.dot", "w+"); // write only 
-    if (out_file == NULL)  
-		perror("Error! Could not open file\n"); 
+	
 	srand(time(0)); 
+	if (out_file == NULL)  
+		perror("Error! Could not open file\n"); 
 	
-	strcpy(ReGex, argv[1]);
-	ReGex = addCntSym(ReGex);
-	printf(ReGex);
-	infixToPostfix(ReGex);
-    len = strlen(ReGex);
-	
-	struct Thompson * graph = readReGex(ReGex, &len);
-	strcpy(ReGex, argv[1]);
-	
+	strcpy(ReGex, argv[1]);	
+	struct Thompson * graph = makeGraph(ReGex);
+	strcpy(ReGex, argv[1]);	
 	res = getDotNotation(graph, ReGex);
+	printf(res);
 	int x = fprintf(out_file, res);
 	fclose(out_file);
 	return 0;
