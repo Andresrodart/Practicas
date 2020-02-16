@@ -3,26 +3,25 @@ digraph finite_state_machine{
     subgraph cluster{
         style = "rounded,filled";
         color = "#000000";
-        fillcolor = "0.220 0.3 0.9";
+        fillcolor = "0.828 0.3 0.9";
         node [shape = point ] qi;
-        node [style = "rounded,filled", color = "#000000", fillcolor = white, shape = doublecircle] 7;
+        node [style = "rounded,filled", color = "#000000", fillcolor = white, shape = doublecircle] 6;
         node [style = "rounded,filled", color = "#000000", fillcolor = white, shape="oval"];
         qi -> 0 [ label = "Start" ];
-	0 -> 1 [ label = "a" ];
+	0 -> 1 [ label = "&epsilon;" ];
+	0 -> 7 [ label = "&epsilon;" ];
 	1 -> 2 [ label = "&epsilon;" ];
-	1 -> 8 [ label = "&epsilon;" ];
-	2 -> 3 [ label = "&epsilon;" ];
-	3 -> 4 [ label = "a" ];
+	2 -> 3 [ label = "a" ];
+	3 -> 4 [ label = "&epsilon;" ];
+	3 -> 2 [ label = "&epsilon;" ];
 	4 -> 5 [ label = "&epsilon;" ];
-	4 -> 3 [ label = "&epsilon;" ];
-	5 -> 6 [ label = "&epsilon;" ];
-	6 -> 7 [ label = "g" ];
-	8 -> 9 [ label = "&epsilon;" ];
-	8 -> 11 [ label = "&epsilon;" ];
-	9 -> 10 [ label = "b" ];
-	10 -> 11 [ label = "&epsilon;" ];
-	10 -> 9 [ label = "&epsilon;" ];
-	11 -> 6 [ label = "&epsilon;" ];
-	label = "NFA of Thompson of: ab*|a+g";
+	5 -> 6 [ label = "g" ];
+	7 -> 8 [ label = "&epsilon;" ];
+	7 -> 10 [ label = "&epsilon;" ];
+	8 -> 9 [ label = "b" ];
+	9 -> 10 [ label = "&epsilon;" ];
+	9 -> 8 [ label = "&epsilon;" ];
+	10 -> 5 [ label = "&epsilon;" ];
+	label = "NFA of Thompson of: (ab)*|a+.g";
     }
 }

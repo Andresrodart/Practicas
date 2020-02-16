@@ -33,14 +33,13 @@ digraph finite_state_machine{\n\
         node [shape = point ] qi;\n\
         node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white, shape = doublecircle] %d;\n\
         node [style = \"rounded,filled\", color = \"#000000\", fillcolor = white, shape=\"oval\"];\n\
-        qi -> 0 [ label = \"Start\" ];\n"
+        qi -> 0 [ label = \"Start\" ];\n\0"
 #endif
 #if !defined(graphDotTail)
 /*Basic graph in .dot notation */
 #define graphDotTail "\
     }\n\
-}\0\
-"
+}\0"
 #endif
 
 #ifndef THOMPSON_h_
@@ -65,7 +64,7 @@ and id = UINT_MAX if not defined
     struct Thompson * * nodes;*/
 struct Thompson * makeNode(int n);
 /*Start proces of making a Thompson FNA*/
-struct Thompson * makeGraph(char * regex);
+struct Thompson * makeGraph(char * __regex);
 /*Make a literal tamplate, fill it and return a pointer to q*/
 struct Thompson * makeLieteral(char * x);
 /*Make a concatenation template, fill it and return a pointer to q*/

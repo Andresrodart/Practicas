@@ -20,20 +20,20 @@
 */
 
 int main(int n, char const *argv[]){
-	int len = strlen(argv[1]);
+	struct Thompson * graph;
+	int len = strlen(argv[1]), x;
+	FILE * out_file = fopen("NFA.dot", "w+");
 	char * ReGex = (char *) calloc(len, sizeof(char)), * res;
-	FILE * out_file = fopen("NFA.dot", "w+"); // write only 
 	
-	srand(time(0)); 
+	// To give random back ground colo
+	srand(time(0));
 	if (out_file == NULL)  
 		perror("Error! Could not open file\n"); 
+	strcpy(ReGex, argv[1]);	
 	
-	strcpy(ReGex, argv[1]);	
-	struct Thompson * graph = makeGraph(ReGex);
-	strcpy(ReGex, argv[1]);	
+	graph = makeGraph(ReGex);
 	res = getDotNotation(graph, ReGex);
-	printf(res);
-	int x = fprintf(out_file, res);
+	x = fprintf(out_file, res);
 	fclose(out_file);
 	return 0;
 }

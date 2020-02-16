@@ -23,17 +23,19 @@ struct Thompson * readReGex(char * regex, int * len){
 		__errorHandler(0, charToString(x));
 }
 
-struct Thompson * makeGraph(char * regex){
+struct Thompson * makeGraph(char * __regex){
+	char * Regex = (char *) malloc(strlen(__regex) * sizeof(char));
 	struct Thompson * graph;
 	int len;
 
-	if(!hasConcatSym(regex))
-		regex = addConcatSym(regex);
+	strcpy(Regex, __regex);
+	if(!hasConcatSym(Regex))
+		Regex = addConcatSym(Regex);
 	
-	infixToPostfix(regex);
-	len = strlen(regex);
-	graph = readReGex(regex, &len);
-	
+	infixToPostfix(Regex);
+	len = strlen(Regex);
+	graph = readReGex(Regex, &len);
+	free(Regex);
 	return graph;
 }
 
@@ -123,7 +125,7 @@ void giveId(struct Thompson * q, int * serial){
     if (q->id == UINT_MAX)
         q->id = (int) (*serial)++;
     for (int i = 0; i < q->n; i++)
-        if (!q->nodes[i]->visited && q->nodes[i]->id > q->id)
+		if (!q->nodes[i]->visited && q->nodes[i]->id > q->id)
             giveId(q->nodes[i], serial);
     q->visited = True;
 }
@@ -167,11 +169,11 @@ char * getDotNotation(struct Thompson * __q, char * Regex){
     int i = 0, finalState;
     struct Thompson * iterator = getFinal(__q);
 	char * res = (char *) malloc(2 * strlen(graphDotHeader) * sizeof(char));
-	char * aux = (char *) malloc((strlen(res) + 35) * sizeof(char));
-    giveId(__q, &i);
+	char * aux = (char *) malloc((strlen(Regex) + 50) * sizeof(char));
+	giveId(__q, &i);
 	sprintf(res, graphDotHeader, (float) (rand() % 1000)/1000, iterator->id);
 	makeString(__q, &res);
-    sprintf(aux,"\tlabel = \"NFA of Thompson of: %s\";\n", Regex);
+    sprintf(aux,"\tlabel = \"NFA of Thompson of: %s\";\n\0", Regex);
 	strcat(res, aux);
 	strcat(res, graphDotTail);
 	free(aux);
@@ -204,7 +206,8 @@ void __errorHandler(int __cod, char * __inf){
 	char * msg = (char *) malloc(120 * sizeof(char));
 	if(__cod == 0)
 		sprintf(msg, "No recognized character: --- %s ---", __inf);
-	
+	else if(__cod == 1)
+		strcpy(msg, __inf);
 	perror(msg);
 	free(msg);
 }
