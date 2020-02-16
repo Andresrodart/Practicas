@@ -43,7 +43,6 @@ struct Thompson * makeNode(int n){
     struct Thompson * res = (struct Thompson *) malloc(sizeof(struct Thompson));
     res->n = n;
     res->id = UINT_MAX;
-    res->visited = False;
     res->final = (n != 0)? False:True;
     res->desc  = (n != 0)? (char * *) malloc(n * sizeof(char *)):NULL;
     res->nodes = (n != 0)? (struct Thompson * *) malloc(n * sizeof(struct Thompson *)):NULL;
@@ -125,15 +124,12 @@ void giveId(struct Thompson * q, int * serial){
     if (q->id == UINT_MAX)
         q->id = (int) (*serial)++;
     for (int i = 0; i < q->n; i++)
-		if (!q->nodes[i]->visited && q->nodes[i]->id > q->id)
+		if (q->nodes[i]->id > q->id)
             giveId(q->nodes[i], serial);
-    q->visited = True;
 }
 
 int makeString(struct Thompson * q, char * * output){
     if(q->n == 0)
-		return 0;
-	if(!q->visited)
 		return 0;
 
 	int len = 2*strlen(*output) + 4*strlen(transitionDot) + 2*strlen(epsilonDot);
@@ -146,14 +142,14 @@ int makeString(struct Thompson * q, char * * output){
 		sprintf(tmp, transitionDot, q->id, q->nodes[i]->id, q->desc[i]);
 		strcat(aux, tmp);
 	}
-    
+
+    free(tmp);
 	tmp = *output;
 	*output = aux;
     free(tmp);
-    q->visited = False;
-    
+
 	for (int i = 0; i < q->n; i++)
-        if (q->nodes[i]->visited && q->nodes[i]->id > q->id)
+        if (q->nodes[i]->id > q->id)
 		    makeString( q->nodes[i], output);
 	return 0;
 }
@@ -186,7 +182,6 @@ char * addConcatSym(char * regex){
     while (*aux++ = *regex++)
         if (isalpha( *regex ) && !isGruping(*(regex - 1)))
             *aux++ = '.';
-    free(aux);
     return res;
 }
 

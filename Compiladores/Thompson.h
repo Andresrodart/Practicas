@@ -47,7 +47,7 @@ digraph finite_state_machine{\n\
 /*Struct for each node in a Thompson NFA*/
 struct Thompson{
     /*id, number of conections or bool flag for final*/
-	unsigned int id, n, final, visited;
+	unsigned int id, n, final;
     /*Describe movement to nodes[i] whith char[i]*/
     char * * desc;
     /*0: R - 1: L*/
