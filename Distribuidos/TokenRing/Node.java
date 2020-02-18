@@ -52,7 +52,7 @@ public class Node {
 						synchronized (lock) {
 							send = true;
 							try {
-								sleep(10);
+								sleep(500);
 							} catch (final InterruptedException e) {
 								e.printStackTrace();
 							}
