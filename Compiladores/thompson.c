@@ -10,7 +10,7 @@ struct Thompson * readReGex(char * regex, int * len){
     //We do not check is len inside the regex lenght because the last letter we will read is a Literal and literals never call readReGex again
 	char x = regex[--(*len)];
     if (isalpha(x))
-        return makeLieteral(charToString(x));
+        return makeLiteral(charToString(x));
     else if(x == '.')
         return makeConcatenation(regex, len);
     else if (x == '|')
@@ -43,13 +43,14 @@ struct Thompson * makeNode(int n){
     struct Thompson * res = (struct Thompson *) malloc(sizeof(struct Thompson));
     res->n = n;
     res->id = UINT_MAX;
+    res->visited = False;
     res->final = (n != 0)? False:True;
     res->desc  = (n != 0)? (char * *) malloc(n * sizeof(char *)):NULL;
     res->nodes = (n != 0)? (struct Thompson * *) malloc(n * sizeof(struct Thompson *)):NULL;
     return res;
 }
 
-struct Thompson * makeLieteral(char * x){
+struct Thompson * makeLiteral(char * x){
     struct Thompson * res = makeNode(1);
 	res->desc[0] = x;
     res->nodes[0] = makeNode(0);
@@ -68,7 +69,7 @@ struct Thompson * makeConcatenation(char * regex, int * len){
 struct Thompson * makeAlternation(char * regex, int * len){
     struct Thompson * res, * end;
     res = makeNode(2);
-    end = makeLieteral(epsilonDot);
+    end = makeLiteral(epsilonDot);
     res->desc[0] = epsilonDot; 
     res->desc[1] = epsilonDot; 
     res->nodes[0] = readReGex(regex, len); 
@@ -96,7 +97,7 @@ struct Thompson * makeKleene(char * regex, int * len){
     end->nodes[1] = res->nodes[0]; 
     res->nodes[1] = end->nodes[0];
     
-    //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
+    //To this node they may be already one or two pointer to it, so we have to keep direction but change info
    	copyStruct(getFinal(res), end);
     
     return res;
@@ -104,7 +105,7 @@ struct Thompson * makeKleene(char * regex, int * len){
 
 struct Thompson * makeAdd(char * regex, int * len){
     struct Thompson * res, * end;
-    res = makeLieteral(epsilonDot);
+    res = makeLiteral(epsilonDot);
     end = makeNode(2);
      
     end->desc[0] = epsilonDot; 
@@ -114,7 +115,7 @@ struct Thompson * makeAdd(char * regex, int * len){
     end->nodes[0] = makeNode(0);
     
 	end->nodes[1] = res->nodes[0]; 
-    //To this node they may be already one or two pointer to it, so we have to keep direcction but change info
+    //To this node they may be already one or two pointer to it, so we have to keep direction but change info
     copyStruct(getFinal(res), end);
 	
 	return res;
@@ -129,9 +130,9 @@ void giveId(struct Thompson * q, int * serial){
 }
 
 int makeString(struct Thompson * q, char * * output){
-    if(q->n == 0)
+    if(q->n == 0 || q->final)
 		return 0;
-
+    
 	int len = 2*strlen(*output) + 4*strlen(transitionDot) + 2*strlen(epsilonDot);
 	char * aux = (char *) malloc(len * sizeof(char));
 	char * tmp = (char *) calloc(len, sizeof(char));
@@ -147,9 +148,9 @@ int makeString(struct Thompson * q, char * * output){
 	tmp = *output;
 	*output = aux;
     free(tmp);
-
+    q->visited = True;
 	for (int i = 0; i < q->n; i++)
-        if (q->nodes[i]->id > q->id)
+        if (q->nodes[i]->id > q->id && !q->nodes[i]->visited)
 		    makeString( q->nodes[i], output);
 	return 0;
 }
@@ -180,7 +181,7 @@ char * addConcatSym(char * regex){
     char * aux = (char *) malloc(2 * strlen(regex) * sizeof(char)), * res;
     res = aux;
     while (*aux++ = *regex++)
-        if (isalpha( *regex ) && !isGruping(*(regex - 1)))
+        if (isalpha( *regex ) && !isGrouping(*(regex - 1)))
             *aux++ = '.';
     return res;
 }

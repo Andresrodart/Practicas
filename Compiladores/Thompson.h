@@ -46,9 +46,9 @@ digraph finite_state_machine{\n\
 #define THOMPSON_h_
 /*Struct for each node in a Thompson NFA*/
 struct Thompson{
-    /*id, number of conections or bool flag for final*/
-	unsigned int id, n, final;
-    /*Describe movement to nodes[i] whith char[i]*/
+    /*id, number of connections or bool flag for final*/
+	unsigned int id, n, final, visited;
+    /*Describe movement to nodes[i] with char[i]*/
     char * * desc;
     /*0: R - 1: L*/
     struct Thompson * * nodes;
@@ -66,7 +66,7 @@ struct Thompson * makeNode(int n);
 /*Start proces of making a Thompson FNA*/
 struct Thompson * makeGraph(char * __regex);
 /*Make a literal tamplate, fill it and return a pointer to q*/
-struct Thompson * makeLieteral(char * x);
+struct Thompson * makeLiteral(char * x);
 /*Make a concatenation template, fill it and return a pointer to q*/
 struct Thompson * makeConcatenation(char * regex, int * len);
 /*Make a alternation template, fill it and return a pointer to q*/
@@ -81,13 +81,13 @@ struct Thompson * getFinal(struct Thompson * __init);
 int makeString(struct Thompson * q, char * * output);
 /*Check ReGex syntax True if contains . False else*/
 int hasConcatSym(char * __regex);
-/*Auxilair function to get the code in .dot format */
+/*Auxiliary function to get the code in .dot format */
 char * getDotNotation(struct Thompson * q, char * Regex);
 /*Auxliar function to transform char into char* */
 char * charToString(char x);
-/*Auxiliar function to add . to a Regex*/
+/*Auxiliary function to add . to a Regex*/
 char * addConcatSym(char * regex);
-/*Give id to all nodes recursivly*/
+/*Give id to all nodes recursively*/
 void giveId(struct Thompson * q, int * serial);
 /*Copy struct contet from x to y*/
 void copyStruct(struct Thompson * __dest, struct Thompson * __src );

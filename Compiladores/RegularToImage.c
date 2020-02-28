@@ -35,6 +35,6 @@ int main(int n, char const *argv[]){
 	res = getDotNotation(graph, ReGex);
 	x = fprintf(out_file, res);
 	fclose(out_file);
-	system("dot -Tpng NFA.dot > NFA.png && eog NFA.png");
+	system("dot -Tpng NFA.dot > NFA.png "); //&& eog NFA.png
 	return 0;
 }

@@ -20,7 +20,7 @@ int Prec(char ch) {
 int isOperand(char ch){ 
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9'); 
 } 
-int isGruping(char ch){
+int isGrouping(char ch){
 	return (ch =='(' || ch ==')' || ch =='{' || ch =='}' || ch =='[' || ch ==']' || ch =='|');
 }
 // The main function that converts given infix expression 
