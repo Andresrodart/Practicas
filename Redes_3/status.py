@@ -34,7 +34,8 @@ def get_CPU():
 	cpu['CPU USAGE %'] = l1[1] + l1[3]
 	mem['RAM TOTAL'] = l2[3] 
 	mem['RAM USED'] = l2[7]
-	return {'CPU': cpu, 'RAM': mem}
+	result = subprocess_cmd('netstat -an | grep :443 | grep ESTABLISHED | wc -l').decode('utf-8')
+	return {'CPU': cpu, 'RAM': mem, 'Connections':result}
 
 if __name__ == "__main__":
 	data = {}
