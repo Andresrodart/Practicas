@@ -25,7 +25,7 @@ int main(int n, char const *argv[]){
 	FILE * out_file = fopen("NFA.dot", "w+");
 	char * ReGex = (char *) calloc(len, sizeof(char)), * res;
 	
-	// To give random back ground colo
+	// To give random back ground color
 	srand(time(0));
 	if (out_file == NULL)  
 		perror("Error! Could not open file\n"); 
